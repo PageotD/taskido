@@ -3,6 +3,7 @@ GO_CMD = go
 SRC_DIR = sources
 BIN_DIR = bin
 BIN_NAME = taskido
+PRF_DIR = profiling
 
 # Targets
 all: build
@@ -22,9 +23,15 @@ build-macos:
 # Build for both platforms
 build: build-linux build-windows build-macos
 
+test:
+	$(GO_CMD) -C $(SRC_DIR) test -v -coverprofile=../$(PRF_DIR)/coverage.out -cpuprofile=../$(PRF_DIR)/cpu.out -memprofile=../$(PRF_DIR)/mem.out
+# $(GO_CMD) tool cover -html=coverage.out -o coverage.html
+# $(GO_CMD) tool pprof cpu.out
+# $(GO_CMD) tool pprof mem.out
+
 # Clean build artifacts
 clean:
-	rm -f $(BIN_DIR)/$(BIN_NAME)-linux $(BIN_DIR)/$(BIN_NAME).exe
+	rm -f $(BIN_DIR)/$(BIN_NAME)*
 
 
 .PHONY: all build clean
