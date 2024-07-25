@@ -11,14 +11,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// ANSI color codes
-const (
-	Blue   = "\033[34m" // Blue color code
-	Green  = "\033[32m" // Green color code
-	Violet = "\033[35m" // Violet color code
-	Reset  = "\033[0m"  // Reset color code
-)
-
 // Task structure corresponds to the JSON object
 type Task struct {
 	ID            int      `json:"id"`
@@ -155,7 +147,8 @@ func handleList() {
 		// Apply color to parts of the project names
 		subjectWithColor := applyColorToSubject(task.Subject)
 		projectWithColor := applyColorToProject(task.Projects)
-		fmt.Printf("%-4d \033[32m%-12s \033[35m%s \033[0m %s\n", task.ID, task.Due, projectWithColor, subjectWithColor)
+		dueDateWithColor := applyColorToDate(task.Due)
+		fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
 	}
 }
 
@@ -174,20 +167,4 @@ func extractMatches(matches [][]string) []string {
 		result = append(result, getMatchValue(match))
 	}
 	return result
-}
-
-// Helper function to apply color to the subject
-func applyColorToSubject(subject string) string {
-	// Replace @ followed by any characters with blue color
-	return regexp.MustCompile(`@(\S+)`).ReplaceAllString(subject, Blue+"@$1"+Reset)
-}
-
-// Helper function to apply color to the project names
-func applyColorToProject(projectList []string) string {
-	var coloredProjects []string
-	for _, project := range projectList {
-		coloredProjects = append(coloredProjects, Violet+"+"+project+Reset)
-	}
-	// Join colored projects with a space
-	return strings.Join(coloredProjects, " ")
 }
