@@ -15,8 +15,12 @@ build-linux:
 build-windows:
 	GOOS=windows GOARCH=amd64 $(GO_CMD) -C $(SRC_DIR) build -o ../$(BIN_DIR)/$(BIN_NAME).exe -ldflags="-s -w" -a -tags netgo -installsuffix netgo
 
+# Compile for macOS
+build-macos:
+	GOOS=darwin GOARCH=amd64 $(GO_CMD) -C $(SRC_DIR) build -o ../$(BIN_DIR)/$(BIN_NAME)-macos -ldflags="-s -w" -a -tags netgo -installsuffix netgo
+
 # Build for both platforms
-build: build-linux build-windows
+build: build-linux build-windows build-macos
 
 # Clean build artifacts
 clean:
