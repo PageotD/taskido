@@ -9,7 +9,7 @@ all: build
 
 # Compile for Linux
 build-linux:
-	$(GO_CMD) -C $(SRC_DIR) build -o ../$(BIN_DIR)/$(BIN_NAME)-linux -ldflags="-s -w" -a -tags netgo -installsuffix netgo 
+	GOOS=linux GOARCH=amd64 $(GO_CMD) -C $(SRC_DIR) build -o ../$(BIN_DIR)/$(BIN_NAME)-linux -ldflags="-s -w" -a -tags netgo -installsuffix netgo 
 
 # Compile for Windows
 build-windows:
