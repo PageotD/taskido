@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"taskido/internal/formatter"
@@ -31,6 +32,7 @@ func main() {
 	// Define flags for the commands
 	addFlag := flag.Bool("add", false, "Indicates that the following text should be processed")
 	listFlag := flag.Bool("list", false, "List all tasks")
+	cmpFlag := flag.Int("cmp", 0, "Mark a task as complete")
 
 	// Parse the command-line flags
 	flag.Parse()
@@ -41,6 +43,9 @@ func main() {
 	} else if *listFlag {
 		// Handle the -list command
 		handleList()
+	} else if *cmpFlag != 0 {
+		// Handle the -cmp command
+		handleComplete(*cmpFlag)
 	} else {
 		fmt.Println("No valid flag provided. Use -add to add a task or -list to list tasks.")
 	}
@@ -152,6 +157,64 @@ func handleList() {
 		fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
 	}
 }
+
+func handleComplete(taskID int) {
+	// Charger les tâches depuis le fichier JSON
+	var tasks []Task
+	filePath := "tasks.json"
+
+	// Vérifier si le fichier existe
+	if _, err := os.Stat(filePath); err == nil {
+		file, err := os.ReadFile(filePath)
+		if err != nil {
+			fmt.Printf("Error reading file: %v\n", err)
+			return
+		}
+		if err := json.Unmarshal(file, &tasks); err != nil {
+			fmt.Printf("Error unmarshalling JSON: %v\n", err)
+			return
+		}
+	} else {
+		fmt.Println("No tasks found.")
+		return
+	}
+
+	// Obtenir la date actuelle
+	now := time.Now().Format("2006-01-02")
+
+	// Mettre à jour la tâche spécifiée
+	var updatedTasks []Task
+	taskUpdated := false
+	for _, task := range tasks {
+		if task.ID == taskID {
+			task.Completed = true
+			task.CompletedDate = now
+			taskUpdated = true
+		}
+		updatedTasks = append(updatedTasks, task)
+	}
+
+	if !taskUpdated {
+		fmt.Printf("Task ID %d not found\n", taskID)
+		return
+	}
+
+	// Écrire les modifications dans le fichier JSON
+	jsonData, err := json.MarshalIndent(updatedTasks, "", "  ")
+	if err != nil {
+		fmt.Printf("Error marshalling JSON: %v\n", err)
+		return
+	}
+
+	err = os.WriteFile(filePath, jsonData, 0644)
+	if err != nil {
+		fmt.Printf("Error writing file: %v\n", err)
+		return
+	}
+
+	fmt.Println("Tasks updated successfully.")
+}
+
 
 // Helper function to get the match value from regex capture groups
 func getMatchValue(matches []string) string {
