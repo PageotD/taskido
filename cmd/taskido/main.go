@@ -14,7 +14,8 @@ import (
 func main() {
 	addFlag := flag.Bool("add", false, "Indicates that the following text should be processed")
 	listFlag := flag.Bool("list", false, "List all tasks")
-	cmpFlag := flag.Int("cmp", 0, "Mark a task as complete")
+	completedFlag := flag.Int("done", 0, "Mark a task as complete")
+	archivedFlag := flag.Int("archive", 0, "Archive a task")
 
 	flag.Parse()
 
@@ -22,10 +23,12 @@ func main() {
 		handleAdd(flag.Args())
 	} else if *listFlag {
 		handleList()
-	} else if *cmpFlag != 0 {
-		handleComplete(*cmpFlag)
+	} else if *completedFlag != 0 {
+		handleComplete(*completedFlag)
+	} else if *archivedFlag != 0 {
+		handleArchived(*archivedFlag)
 	} else {
-		fmt.Println("No valid flag provided. Use -add to add a task or -list to list tasks.")
+		fmt.Println("No valid flag provided. Use -a to add a task or -l to list tasks.")
 	}
 }
 
@@ -77,11 +80,37 @@ func handleList() {
 		return
 	}
 
+	// Current tasks
+	fmt.Printf("Current:\n")
 	for _, task := range tasks {
-		subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
-		projectWithColor := formatter.ApplyColorToProject(task.Projects)
-		dueDateWithColor := formatter.ApplyColorToDate(task.Due)
-		fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
+		if !task.Completed && !task.Archived {
+			subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
+			projectWithColor := formatter.ApplyColorToProject(task.Projects)
+			dueDateWithColor := formatter.ApplyColorToDate(task.Due)
+			fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
+		}
+	}
+
+	// Completed tasks
+	fmt.Printf("\nCompleted:\n")
+	for _, task := range tasks {
+		if task.Completed && !task.Archived {
+			subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
+			projectWithColor := formatter.ApplyColorToProject(task.Projects)
+			dueDateWithColor := formatter.ApplyColorToDate(task.Due)
+			fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
+		}
+	}
+
+	// Completed tasks
+	fmt.Printf("\nArchived:\n")
+	for _, task := range tasks {
+		if task.Archived {
+			subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
+			projectWithColor := formatter.ApplyColorToProject(task.Projects)
+			dueDateWithColor := formatter.ApplyColorToDate(task.Due)
+			fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
+		}
 	}
 }
 
@@ -116,6 +145,37 @@ func handleComplete(taskID int) {
 
 	fmt.Println("Task updated successfully.")
 }
+
+func handleArchived(taskID int) {
+	tasks, err := taskstorage.ReadTasks()
+	if err != nil {
+		fmt.Printf("Error reading tasks: %v\n", err)
+		return
+	}
+
+	var taskToUpdate *taskstorage.Task
+	for i := range tasks {
+		if tasks[i].ID == taskID {
+			taskToUpdate = &tasks[i]
+			break
+		}
+	}
+
+	if taskToUpdate == nil {
+		fmt.Printf("Task ID %d not found\n", taskID)
+		return
+	}
+
+	taskToUpdate.Archived = true
+
+	if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
+		fmt.Printf("Error updating task: %v\n", err)
+		return
+	}
+
+	fmt.Println("Task archived successfully.")
+}
+
 
 func getMatchValue(matches []string) string {
 	if len(matches) > 1 {
