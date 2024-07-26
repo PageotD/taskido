@@ -1,4 +1,4 @@
-package main
+package formatter
 
 import (
 	"strings"
@@ -25,7 +25,7 @@ func TestApplyColorToDate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.date, func(t *testing.T) {
-			result := applyColorToDate(tt.date)
+			result := ApplyColorToDate(tt.date)
 			if result != tt.expectation {
 				t.Errorf("applyColorToDate(%s) = %s; want %s", tt.date, result, tt.expectation)
 			}
@@ -45,7 +45,7 @@ func TestApplyColorToSubject(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.subject, func(t *testing.T) {
-			result := applyColorToSubject(tt.subject)
+			result := ApplyColorToSubject(tt.subject)
 			if result != tt.expectation {
 				t.Errorf("applyColorToSubject(%s) = %s; want %s", tt.subject, result, tt.expectation)
 			}
@@ -65,7 +65,7 @@ func TestApplyColorToProject(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(strings.Join(tt.projects, ", "), func(t *testing.T) {
-			result := applyColorToProject(tt.projects)
+			result := ApplyColorToProject(tt.projects)
 			if result != tt.expectation {
 				t.Errorf("applyColorToProject(%v) = %s; want %s", tt.projects, result, tt.expectation)
 			}

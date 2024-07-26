@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"taskido/internal/formatter"
 )
 
 // Task structure corresponds to the JSON object
@@ -145,9 +146,9 @@ func handleList() {
 	// Print the tasks
 	for _, task := range tasks {
 		// Apply color to parts of the project names
-		subjectWithColor := applyColorToSubject(task.Subject)
-		projectWithColor := applyColorToProject(task.Projects)
-		dueDateWithColor := applyColorToDate(task.Due)
+		subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
+		projectWithColor := formatter.ApplyColorToProject(task.Projects)
+		dueDateWithColor := formatter.ApplyColorToDate(task.Due)
 		fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
 	}
 }

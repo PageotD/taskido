@@ -1,4 +1,4 @@
-package main
+package formatter
 
 import (
 	"regexp"
@@ -17,7 +17,7 @@ const (
 )
 
 // applyColorToDate applies color based on the date's proximity to today
-func applyColorToDate(dueDate string) string {
+func ApplyColorToDate(dueDate string) string {
 	// Parse the due date
 	date, err := time.Parse("2006-01-02", dueDate)
 	if err != nil {
@@ -46,13 +46,13 @@ func applyColorToDate(dueDate string) string {
 //}
 
 // Helper function to apply color to the contexts
-func applyColorToSubject(subject string) string {
+func ApplyColorToSubject(subject string) string {
 	// Replace @ followed by any characters with blue color
 	return regexp.MustCompile(`@(\S+)`).ReplaceAllString(subject, Blue+"@$1"+Reset)
 }
 
 // Helper function to apply color to the project names
-func applyColorToProject(projectList []string) string {
+func ApplyColorToProject(projectList []string) string {
 	var coloredProjects []string
 	for _, project := range projectList {
 		coloredProjects = append(coloredProjects, Violet+"+"+project+Reset)
