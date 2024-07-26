@@ -87,7 +87,7 @@ func handleList() {
 	}
 
 	// Current tasks
-	fmt.Printf("Current:\n")
+	fmt.Printf("\n\033[4mCurrent:\033[0m\n\n")
 	for _, task := range tasks {
 		if !task.Completed && !task.Archived {
 			subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
@@ -98,7 +98,7 @@ func handleList() {
 	}
 
 	// Completed tasks
-	fmt.Printf("\nCompleted:\n")
+	fmt.Printf("\n\033[4mCompleted:\033[0m\n\n")
 	for _, task := range tasks {
 		if task.Completed && !task.Archived {
 			subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
@@ -109,7 +109,7 @@ func handleList() {
 	}
 
 	// Completed tasks
-	fmt.Printf("\nArchived:\n")
+	fmt.Printf("\n\033[4mArchived:\033[0m\n\n")
 	for _, task := range tasks {
 		if task.Archived {
 			subjectWithColor := formatter.ApplyColorToSubject(task.Subject)
@@ -118,6 +118,9 @@ func handleList() {
 			fmt.Printf("%-4d %-12s %s %s\n", task.ID, dueDateWithColor, projectWithColor, subjectWithColor)
 		}
 	}
+
+	// Final blank line
+	fmt.Printf("\n")
 }
 
 func handleComplete(taskID int) {
