@@ -17,6 +17,7 @@ func main() {
 	completedFlag := flag.Int("complete", 0, "Mark a task as complete")
 	uncompletedFlag := flag.Int("uncomplete", 0, "un-complete a tag")
 	archivedFlag := flag.Int("archive", 0, "Archive a task")
+	unarchivedFlag := flag.Int("unarchive", 0, "un-archive a task")
 
 	flag.Parse()
 
@@ -30,6 +31,8 @@ func main() {
 		handleUncomplete(*uncompletedFlag)
 	} else if *archivedFlag != 0 {
 		handleArchived(*archivedFlag)
+	} else if *unarchivedFlag != 0 {
+		handleUnarchived(*unarchivedFlag)
 	} else {
 		fmt.Println("No valid flag provided. Use -a to add a task or -l to list tasks.")
 	}
@@ -202,6 +205,36 @@ func handleArchived(taskID int) {
 	}
 
 	taskToUpdate.Archived = true
+
+	if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
+		fmt.Printf("Error updating task: %v\n", err)
+		return
+	}
+
+	fmt.Println("Task archived successfully.")
+}
+
+func handleUnarchived(taskID int) {
+	tasks, err := taskstorage.ReadTasks()
+	if err != nil {
+		fmt.Printf("Error reading tasks: %v\n", err)
+		return
+	}
+
+	var taskToUpdate *taskstorage.Task
+	for i := range tasks {
+		if tasks[i].ID == taskID {
+			taskToUpdate = &tasks[i]
+			break
+		}
+	}
+
+	if taskToUpdate == nil {
+		fmt.Printf("Task ID %d not found\n", taskID)
+		return
+	}
+
+	taskToUpdate.Archived = false
 
 	if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
 		fmt.Printf("Error updating task: %v\n", err)
