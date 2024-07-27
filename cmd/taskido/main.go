@@ -18,6 +18,7 @@ func main() {
 	uncompletedFlag := flag.Int("uncomplete", 0, "un-complete a tag")
 	archivedFlag := flag.Int("archive", 0, "Archive a task")
 	unarchivedFlag := flag.Int("unarchive", 0, "un-archive a task")
+	deleteFlag := flag.Int("delete", 0, "delete a task")
 
 	flag.Parse()
 
@@ -33,6 +34,8 @@ func main() {
 		handleArchived(*archivedFlag)
 	} else if *unarchivedFlag != 0 {
 		handleUnarchived(*unarchivedFlag)
+	} else if *deleteFlag != 0 {
+		handleDelete(*deleteFlag)
 	} else {
 		fmt.Println("No valid flag provided. Use -a to add a task or -l to list tasks.")
 	}
@@ -247,6 +250,32 @@ func handleUnarchived(taskID int) {
 	fmt.Println("Task archived successfully.")
 }
 
+func handleDelete(taskID int) {
+	tasks, err := taskstorage.ReadTasks()
+	if err != nil {
+		fmt.Printf("Error reading tasks: %v\n", err)
+		return
+	}
+
+	find := false
+	for i := range tasks {
+		if tasks[i].ID == taskID {
+			find = true
+			break
+		}
+	}
+
+	if !find {
+		fmt.Printf("Task %s not found\n", taskID)
+	}
+
+	if err := taskstorage.DeleteTask(taskID); err != nil {
+		fmt.Printf("Error updating task: %v\n", err)
+		return
+	}
+
+	fmt.Println("Task deleted successfully.")
+}
 
 func getMatchValue(matches []string) string {
 	if len(matches) > 1 {
