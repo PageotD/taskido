@@ -266,7 +266,7 @@ func handleDelete(taskID int) {
 	}
 
 	if !find {
-		fmt.Printf("Task %s not found\n", taskID)
+		fmt.Printf("Task %d not found\n", taskID)
 	}
 
 	if err := taskstorage.DeleteTask(taskID); err != nil {
