@@ -20,7 +20,7 @@ func HandleAdd(args []string) {
     duePattern := regexp.MustCompile(`due:(\d{4}-\d{2}-\d{2})`)
 
     projectMatches := projectPattern.FindAllStringSubmatch(addText, -1)
-    contextMatch := contextPattern.FindStringSubmatch(addText)
+    contextMatch := contextPattern.FindAllStringSubmatch(addText, -1)
     dueMatch := duePattern.FindStringSubmatch(addText)
 
     taskDescription := addText
@@ -36,7 +36,7 @@ func HandleAdd(args []string) {
         UUID:          uuid.NewString(),
         Subject:       taskDescription,
         Projects:      ExtractMatches(projectMatches),
-        Contexts:      []string{GetMatchValue(contextMatch)},
+        Contexts:      ExtractMatches(contextMatch),
         Due:           GetMatchValue(dueMatch),
         Completed:     false,
         CompletedDate: "",
