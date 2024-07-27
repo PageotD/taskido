@@ -35,9 +35,9 @@ func HandleAdd(args []string) {
     task := taskstorage.Task{
         UUID:          uuid.NewString(),
         Subject:       taskDescription,
-        Projects:      extractMatches(projectMatches),
-        Contexts:      []string{getMatchValue(contextMatch)},
-        Due:           getMatchValue(dueMatch),
+        Projects:      ExtractMatches(projectMatches),
+        Contexts:      []string{GetMatchValue(contextMatch)},
+        Due:           GetMatchValue(dueMatch),
         Completed:     false,
         CompletedDate: "",
         Archived:      false,
@@ -239,19 +239,4 @@ func HandleDelete(taskID int) {
     }
 
     fmt.Println("Task deleted successfully.")
-}
-
-func getMatchValue(matches []string) string {
-    if len(matches) > 1 {
-        return matches[1]
-    }
-    return ""
-}
-
-func extractMatches(matches [][]string) []string {
-    var result []string
-    for _, match := range matches {
-        result = append(result, getMatchValue(match))
-    }
-    return result
 }
