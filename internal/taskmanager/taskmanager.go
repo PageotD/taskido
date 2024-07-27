@@ -8,36 +8,31 @@ import (
     "taskido/internal/taskstorage"
 	"taskido/internal/formatter"
     "github.com/google/uuid"
-    "regexp"
 )
 
 // HandleAdd adds a new task
 func HandleAdd(args []string) {
     addText := strings.Join(args, " ")
 
-    projectPattern := regexp.MustCompile(`\+(\S+)`)
-    contextPattern := regexp.MustCompile(`@(\S+)`)
-    duePattern := regexp.MustCompile(`due:(\d{4}-\d{2}-\d{2})`)
-
-    projectMatches := projectPattern.FindAllStringSubmatch(addText, -1)
-    contextMatch := contextPattern.FindAllStringSubmatch(addText, -1)
-    dueMatch := duePattern.FindStringSubmatch(addText)
+    projectMatches := ExtractProjects(addText)
+    contextMatches := ExtractContexts(addText)
+    dueMatch := ExtractDue(addText)
 
     taskDescription := addText
     for _, match := range projectMatches {
-        taskDescription = strings.Replace(taskDescription, match[0], "", 1)
+        taskDescription = strings.Replace(taskDescription, match, "", 1)
     }
-    if dueMatch != nil {
-        taskDescription = strings.Replace(taskDescription, dueMatch[0], "", 1)
+    if dueMatch != "" {
+        taskDescription = strings.Replace(taskDescription, "due:"+dueMatch, "", 1)
     }
     taskDescription = strings.TrimSpace(taskDescription)
 
     task := taskstorage.Task{
         UUID:          uuid.NewString(),
         Subject:       taskDescription,
-        Projects:      ExtractMatches(projectMatches),
-        Contexts:      ExtractMatches(contextMatch),
-        Due:           GetMatchValue(dueMatch),
+        Projects:      projectMatches, 
+        Contexts:      contextMatches,
+        Due:           dueMatch,
         Completed:     false,
         CompletedDate: "",
         Archived:      false,
