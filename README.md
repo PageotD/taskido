@@ -10,7 +10,13 @@ To maintain a clear and structured history in the project, I use a system based 
 Each commit message should be structured as follows:
 
 ```bash
-<type>(<scope>): <subject>
+<type>(<scope>): <short summary>
+  │       │             │
+  │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.
+  │       │
+  │       └─⫸ Commit Scope: taskido|formatter|taskmanager|taskstorage|docs
+  │
+  └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test
 ```
 - `<type>`: The type of change being made (e.g., feat, fix, docs, etc.)
 - `<scope>`: (Optional) The scope of the change (e.g., ui, api, build). This can be omitted if not relevant.

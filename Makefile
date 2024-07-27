@@ -6,24 +6,27 @@ INT_DIR = internal
 INT_PKG = $(wildcard $(INT_DIR)/*)
 BIN_NAME = taskido
 PRF_DIR = profiling
+BUILD_FLAGS = -ldflags="-s -w" -a -tags netgo -installsuffix netgo
 
 # Targets
 all: build
 
-# Compile for Linux
-build-linux:
-	GOOS=linux GOARCH=amd64 $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(BIN_NAME)-linux -ldflags="-s -w" -a -tags netgo -installsuffix netgo 
+# Create necessary directories
+mkdirs:
+	mkdir -p $(BIN_DIR)/linux-amd64
+	mkdir -p $(BIN_DIR)/windows-amd64
+	mkdir -p $(BIN_DIR)/darwin-amd64
+	mkdir -p $(PRF_DIR)
 
-# Compile for Windows
-build-windows:
-	GOOS=windows GOARCH=amd64 $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(BIN_NAME).exe -ldflags="-s -w" -a -tags netgo -installsuffix netgo
+# Compile for specified OS and ARCH
+build-for-os-arch:
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o $(BIN_DIR)/$(GOOS)-$(GOARCH)/$(BIN_NAME) $(BUILD_FLAGS)
 
-# Compile for macOS
-build-macos:
-	GOOS=darwin GOARCH=amd64 $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(BIN_NAME)-macos -ldflags="-s -w" -a -tags netgo -installsuffix netgo
-
-# Build for all platforms
-build: build-linux build-windows build-macos
+# Compile for all platforms
+build: mkdirs
+	$(MAKE) build-for-os-arch GOOS=linux GOARCH=amd64
+	$(MAKE) build-for-os-arch GOOS=windows GOARCH=amd64
+	$(MAKE) build-for-os-arch GOOS=darwin GOARCH=amd64
 
 # Test the cmd/taskido package
 test-cmd:
@@ -40,6 +43,6 @@ test: test-cmd test-internal
 
 # Clean build artifacts
 clean:
-	rm -f ../$(BIN_DIR)/$(BIN_NAME)*
+	rm -rf $(BIN_DIR)/*-amd64
 
 .PHONY: all build clean test test-cmd test-internal
