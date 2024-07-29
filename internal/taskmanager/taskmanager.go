@@ -37,7 +37,7 @@ func HandleAdd(args []string) (taskmodel.Task, error) {
         Completed:     false,
         CompletedDate: "",
         Archived:      false,
-        IsPriority:    false,
+        Priority:    false,
         Notes:         nil,
     }
 
