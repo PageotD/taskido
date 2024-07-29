@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"testing"
+	"taskido/internal/taskmodel"
 )
 
 const testFilePath = "test_tasks.json"
@@ -11,7 +12,7 @@ const testFilePath = "test_tasks.json"
 func setupTestFile(t *testing.T) {
 	t.Helper()
 	// Crée un fichier avec des données spécifiques pour les tests
-	initialData := []Task{
+	initialData := []taskmodel.Task{
 		{
 			ID:            1,
 			UUID:          "dd556cc5-ff74-4a4f-857f-2bcefac18e47",
@@ -22,7 +23,7 @@ func setupTestFile(t *testing.T) {
 			Completed:     true,
 			CompletedDate: "2024-08-28",
 			Archived:      false,
-			IsPriority:    false,
+			Priority:    false,
 			Notes:         nil,
 		},
 	}
@@ -106,17 +107,17 @@ func TestAddTask(t *testing.T) {
 	setupTestFile(t)
 	defer teardownTestFile(t)
 
-	initialTask := Task{
+	initialTask := taskmodel.Task{
 		ID:      1,
 		UUID:    "uuid1",
 		Subject: "Initial Task",
 	}
 
-	if err := WriteTasks([]Task{initialTask}); err != nil {
+	if err := WriteTasks([]taskmodel.Task{initialTask}); err != nil {
 		t.Fatalf("Error writing initial task: %v", err)
 	}
 
-	newTask := Task{
+	newTask := taskmodel.Task{
 		UUID:    "uuid2",
 		Subject: "New Task",
 	}
@@ -139,17 +140,17 @@ func TestUpdateTask(t *testing.T) {
 	setupTestFile(t)
 	defer teardownTestFile(t)
 
-	initialTask := Task{
+	initialTask := taskmodel.Task{
 		ID:      1,
 		UUID:    "uuid1",
 		Subject: "Initial Task",
 	}
 
-	if err := WriteTasks([]Task{initialTask}); err != nil {
+	if err := WriteTasks([]taskmodel.Task{initialTask}); err != nil {
 		t.Fatalf("Error writing initial task: %v", err)
 	}
 
-	updatedTask := Task{
+	updatedTask := taskmodel.Task{
 		ID:      1,
 		UUID:    "uuid1",
 		Subject: "Updated Task",
@@ -173,13 +174,13 @@ func TestDeleteTask(t *testing.T) {
 	setupTestFile(t)
 	defer teardownTestFile(t)
 
-	task := Task{
+	task := taskmodel.Task{
 		ID:      1,
 		UUID:    "uuid1",
 		Subject: "Task to Delete",
 	}
 
-	if err := WriteTasks([]Task{task}); err != nil {
+	if err := WriteTasks([]taskmodel.Task{task}); err != nil {
 		t.Fatalf("Error writing task: %v", err)
 	}
 
