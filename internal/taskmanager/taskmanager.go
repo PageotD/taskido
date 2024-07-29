@@ -77,15 +77,15 @@ func HandleList() {
 }
 
 // HandleComplete marks a task as complete
-func HandleComplete(taskID int) {
+func HandleComplete(taskID int) (*taskmodel.Task, error) {
     now := time.Now().Format("2006-01-02")
     tasks, err := taskstorage.ReadTasks()
     if err != nil {
-        fmt.Printf("Error reading tasks: %v\n", err)
-        return
+        return nil, fmt.Errorf("error reading tasks: %w", err)
     }
 
     var taskToUpdate *taskmodel.Task
+
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -94,19 +94,18 @@ func HandleComplete(taskID int) {
     }
 
     if taskToUpdate == nil {
-        fmt.Printf("Task ID %d not found\n", taskID)
-        return
+        return nil, fmt.Errorf("task ID %d not found", taskID)
     }
 
     taskToUpdate.Completed = true
     taskToUpdate.CompletedDate = now
 
+    // Update the task in storage if needed
     if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
-        fmt.Printf("Error updating task: %v\n", err)
-        return
+        return nil, fmt.Errorf("error updating task: %w", err)
     }
 
-    fmt.Println("Task updated successfully.")
+    return taskToUpdate, nil
 }
 
 // HandleUncomplete marks a task as uncompleted

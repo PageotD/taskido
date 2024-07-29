@@ -29,10 +29,15 @@ func main() {
 			return
 		}
 		fmt.Println("Task added to tasks.json")
-	} else if *listFlag {
-		taskmanager.HandleList()
 	} else if *completedFlag != 0 {
-		taskmanager.HandleComplete(*completedFlag)
+		tasks, _ := taskmanager.HandleComplete(*completedFlag)
+		if tasks != nil {
+			if err := taskstorage.UpdateTask(*tasks); err != nil {
+				fmt.Printf("Error updating task: %v\n", err)
+				return
+			}
+			fmt.Println("Task updated successfully.")
+		}	
 	} else if *uncompletedFlag != 0 {
 		taskmanager.HandleUncomplete(*uncompletedFlag)
 	} else if *archivedFlag != 0 {
@@ -40,7 +45,9 @@ func main() {
 	} else if *unarchivedFlag != 0 {
 		taskmanager.HandleUnarchived(*unarchivedFlag)
 	} else if *deleteFlag != 0 {
-		taskmanager.HandleDelete(*deleteFlag)
+		taskmanager.HandleDelete(*deleteFlag)	
+	} else if *listFlag {
+		taskmanager.HandleList()
 	} else {
 		fmt.Println("No valid flag provided. Use -a to add a task or -l to list tasks.")
 	}
