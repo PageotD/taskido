@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"taskido/internal/taskmanager"
+	"taskido/internal/taskstorage"
 )
 
 func main() {
@@ -18,7 +19,16 @@ func main() {
 	flag.Parse()
 
 	if *addFlag {
-		taskmanager.HandleAdd(flag.Args())
+		task, err := taskmanager.HandleAdd(flag.Args())
+		if err != nil {
+			fmt.Printf("Error adding task: %v\n", err)
+			return
+		}
+		if err := taskstorage.AddTask(task); err != nil {
+			fmt.Printf("Error adding task: %v\n", err)
+			return
+		}
+		fmt.Println("Task added to tasks.json")
 	} else if *listFlag {
 		taskmanager.HandleList()
 	} else if *completedFlag != 0 {

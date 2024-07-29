@@ -20,7 +20,7 @@ mkdirs:
 
 # Compile for specified OS and ARCH
 build-for-os-arch:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o $(BIN_DIR)/$(GOOS)-$(GOARCH)/$(BIN_NAME) $(BUILD_FLAGS)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(GOOS)-$(GOARCH)/$(BIN_NAME) $(BUILD_FLAGS)
 
 # Compile for all platforms
 build: mkdirs

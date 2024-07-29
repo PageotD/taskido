@@ -11,7 +11,7 @@ import (
 )
 
 // HandleAdd adds a new task
-func HandleAdd(args []string) {
+func HandleAdd(args []string) (taskstorage.Task, error) {
     addText := strings.Join(args, " ")
 
     projectMatches := ExtractProjects(addText)
@@ -40,12 +40,7 @@ func HandleAdd(args []string) {
         Notes:         nil,
     }
 
-    if err := taskstorage.AddTask(task); err != nil {
-        fmt.Printf("Error adding task: %v\n", err)
-        return
-    }
-
-    fmt.Println("Task added to tasks.json")
+    return task, nil
 }
 
 // HandleList lists all tasks
