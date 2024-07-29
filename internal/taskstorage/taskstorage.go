@@ -5,22 +5,8 @@ import (
 	"fmt"
 	"os"
 	"sync"
+	"taskido/internal/taskmodel"
 )
-
-// Task structure corresponds to the JSON object
-type Task struct {
-	ID            int      `json:"id"`
-	UUID          string   `json:"uuid"`
-	Subject       string   `json:"subject"`
-	Projects      []string `json:"projects"`
-	Contexts      []string `json:"contexts"`
-	Due           string   `json:"due"`
-	Completed     bool     `json:"completed"`
-	CompletedDate string   `json:"completedDate"`
-	Archived      bool     `json:"archived"`
-	IsPriority    bool     `json:"isPriority"`
-	Notes         []string `json:"notes"`
-}
 
 var (
 	filePath = "tasks.json"
@@ -28,7 +14,7 @@ var (
 )
 
 // ReadTasks reads the tasks from the JSON file
-func ReadTasks() ([]Task, error) {
+func ReadTasks() ([]taskmodel.Task, error) {
 	mu.Lock()
 	defer mu.Unlock()
 
@@ -42,7 +28,7 @@ func ReadTasks() ([]Task, error) {
 		return nil, fmt.Errorf("error reading file: %v", err)
 	}
 
-	var tasks []Task
+	var tasks []taskmodel.Task
 	if err := json.Unmarshal(file, &tasks); err != nil {
 		return nil, fmt.Errorf("error unmarshalling JSON: %v", err)
 	}
@@ -51,7 +37,7 @@ func ReadTasks() ([]Task, error) {
 }
 
 // WriteTasks writes the tasks to the JSON file
-func WriteTasks(tasks []Task) error {
+func WriteTasks(tasks []taskmodel.Task) error {
 	mu.Lock()
 	defer mu.Unlock()
 
@@ -68,7 +54,7 @@ func WriteTasks(tasks []Task) error {
 }
 
 // AddTask adds a new task to the tasks file
-func AddTask(newTask Task) error {
+func AddTask(newTask taskmodel.Task) error {
 	tasks, err := ReadTasks()
 	if err != nil {
 		return err
@@ -81,7 +67,7 @@ func AddTask(newTask Task) error {
 }
 
 // UpdateTask updates a task in the tasks file
-func UpdateTask(updatedTask Task) error {
+func UpdateTask(updatedTask taskmodel.Task) error {
 	tasks, err := ReadTasks()
 	if err != nil {
 		return err
@@ -104,7 +90,7 @@ func DeleteTask(taskID int) error {
 		return err
 	}
 
-	var updatedTasks []Task
+	var updatedTasks []taskmodel.Task
 	found := false
 	for _, task := range tasks {
 		if task.ID != taskID {

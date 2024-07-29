@@ -5,13 +5,14 @@ import (
     "fmt"
     "strings"
     "time"
+    "taskido/internal/taskmodel"
     "taskido/internal/taskstorage"
 	"taskido/internal/formatter"
     "github.com/google/uuid"
 )
 
 // HandleAdd adds a new task
-func HandleAdd(args []string) (taskstorage.Task, error) {
+func HandleAdd(args []string) (taskmodel.Task, error) {
     addText := strings.Join(args, " ")
 
     projectMatches := ExtractProjects(addText)
@@ -27,7 +28,7 @@ func HandleAdd(args []string) (taskstorage.Task, error) {
     }
     taskDescription = strings.TrimSpace(taskDescription)
 
-    task := taskstorage.Task{
+    task := taskmodel.Task{
         UUID:          uuid.NewString(),
         Subject:       taskDescription,
         Projects:      projectMatches, 
@@ -84,7 +85,7 @@ func HandleComplete(taskID int) {
         return
     }
 
-    var taskToUpdate *taskstorage.Task
+    var taskToUpdate *taskmodel.Task
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -116,7 +117,7 @@ func HandleUncomplete(taskID int) {
         return
     }
 
-    var taskToUpdate *taskstorage.Task
+    var taskToUpdate *taskmodel.Task
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -148,7 +149,7 @@ func HandleArchived(taskID int) {
         return
     }
 
-    var taskToUpdate *taskstorage.Task
+    var taskToUpdate *taskmodel.Task
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -179,7 +180,7 @@ func HandleUnarchived(taskID int) {
         return
     }
 
-    var taskToUpdate *taskstorage.Task
+    var taskToUpdate *taskmodel.Task
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -210,7 +211,7 @@ func HandleDelete(taskID int) {
         return
     }
 
-    var taskToDelete *taskstorage.Task
+    var taskToDelete *taskmodel.Task
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToDelete = &tasks[i]
