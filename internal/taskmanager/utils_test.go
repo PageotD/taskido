@@ -2,6 +2,7 @@ package taskmanager
 
 import (
 	"testing"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetMatchValue(t *testing.T) {
@@ -88,4 +89,91 @@ func TestExtractMatches(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestExtractProjects(t *testing.T) {
+    tests := []struct {
+		name     string
+        input    string
+        expected []string
+    }{
+        {
+			name: "One project",
+            input: "+project1 taskido project ",
+            expected: []string{"+project1"},
+        },
+        {
+			name: "No project",
+            input: "No projects here",
+            expected: []string{},
+        },
+        {
+			name: "+taskido +fileserver Multiple projects",
+            input:    "Multiple +projects +project4",
+            expected: []string{"+projects", "+project4"},
+        },
+    }
+
+    for _, test := range tests {
+        result := ExtractProjects(test.input)
+        assert.ElementsMatch(t, test.expected, result, "For input %s", test.input)
+    }
+}
+
+func TestExtractContexts(t *testing.T) {
+    tests := []struct {
+		name     string
+        input    string
+        expected []string
+    }{
+        {
+			name: "Multiple contexts",
+            input: "Task with @context1 and @context2",
+            expected: []string{"@context1", "@context2"},
+        },
+        {
+			name: "No context",
+            input: "No contexts here",
+            expected: []string{},
+        },
+        {
+			name: "One context",
+            input:    "Another task @context3",
+            expected: []string{"@context3"},
+        },
+    }
+
+    for _, test := range tests {
+        result := ExtractContexts(test.input)
+        assert.ElementsMatch(t, test.expected, result, "For input %s", test.input)
+    }
+}
+
+func TestExtractDue(t *testing.T) {
+    tests := []struct {
+		name     string
+        input    string
+        expected string
+    }{
+        {
+			name: "Valid date",
+            input:    "Task due:2024-08-15",
+            expected: "2024-08-15",
+        },
+        {
+			name: "No date",
+            input:    "No due date here",
+            expected: "",
+        },
+        {
+			name: "Invalid date",
+            input:    "Invalid due date format due:2024-02-30",
+            expected: "2024-02-30", // Even if invalid date, pattern match is correct
+        },
+    }
+
+    for _, test := range tests {
+        result := ExtractDue(test.input)
+        assert.Equal(t, test.expected, result, "For input %s", test.input)
+    }
 }
