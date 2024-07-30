@@ -95,7 +95,7 @@ func main() {
 	} else if *deleteFlag != 0 {
 		err := taskmanager.HandleDelete(*deleteFlag)	
 		if err != nil {
-			fmt.Printf("%w", err)
+			fmt.Printf("%v", err)
 		}
 	} else if *listFlag {
 		taskmanager.HandleList()
