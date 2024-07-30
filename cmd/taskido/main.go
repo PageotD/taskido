@@ -19,6 +19,7 @@ func main() {
 	flag.Parse()
 
 	if *addFlag {
+
 		task, err := taskmanager.HandleAdd(flag.Args())
 		if err != nil {
 			fmt.Printf("Error adding task: %v\n", err)
@@ -29,7 +30,9 @@ func main() {
 			return
 		}
 		fmt.Println("Task added to tasks.json")
+
 	} else if *completedFlag != 0 {
+
 		tasks, _ := taskmanager.HandleComplete(*completedFlag)
 		if tasks != nil {
 			if err := taskstorage.UpdateTask(*tasks); err != nil {
@@ -38,12 +41,40 @@ func main() {
 			}
 			fmt.Println("Task updated successfully.")
 		}	
+
 	} else if *uncompletedFlag != 0 {
-		taskmanager.HandleUncomplete(*uncompletedFlag)
+
+		tasks, _ := taskmanager.HandleUncomplete(*uncompletedFlag)
+		if tasks != nil {
+			if err := taskstorage.UpdateTask(*tasks); err != nil {
+				fmt.Printf("Error updating task: %v\n", err)
+				return
+			}
+			fmt.Println("Task updated successfully.")
+		}
+
 	} else if *archivedFlag != 0 {
-		taskmanager.HandleArchived(*archivedFlag)
+
+		tasks, _ := taskmanager.HandleArchived(*archivedFlag)
+		if tasks != nil {
+			if err := taskstorage.UpdateTask(*tasks); err != nil {
+				fmt.Printf("Error updating task: %v\n", err)
+				return
+			}
+			fmt.Println("Task updated successfully.")
+		}
+
 	} else if *unarchivedFlag != 0 {
-		taskmanager.HandleUnarchived(*unarchivedFlag)
+
+		tasks, _ := taskmanager.HandleUnarchived(*archivedFlag)
+		if tasks != nil {
+			if err := taskstorage.UpdateTask(*tasks); err != nil {
+				fmt.Printf("Error updating task: %v\n", err)
+				return
+			}
+			fmt.Println("Task updated successfully.")
+		}
+
 	} else if *deleteFlag != 0 {
 		taskmanager.HandleDelete(*deleteFlag)	
 	} else if *listFlag {

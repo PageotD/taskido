@@ -109,14 +109,16 @@ func HandleComplete(taskID int) (*taskmodel.Task, error) {
 }
 
 // HandleUncomplete marks a task as uncompleted
-func HandleUncomplete(taskID int) {
+func HandleUncomplete(taskID int) (*taskmodel.Task, error) {
+
     tasks, err := taskstorage.ReadTasks()
+
     if err != nil {
-        fmt.Printf("Error reading tasks: %v\n", err)
-        return
+        return nil, fmt.Errorf("Error reading tasks: %v\n", err)
     }
 
     var taskToUpdate *taskmodel.Task
+
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -125,30 +127,32 @@ func HandleUncomplete(taskID int) {
     }
 
     if taskToUpdate == nil {
-        fmt.Printf("Task ID %d not found\n", taskID)
-        return
+        return nil, fmt.Errorf("task ID %d not found", taskID)
     }
 
     taskToUpdate.Completed = false
     taskToUpdate.CompletedDate = ""
 
+    // Update the task in storage if needed
     if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
-        fmt.Printf("Error updating task: %v\n", err)
-        return
+        return nil, fmt.Errorf("error updating task: %w", err)
     }
 
-    fmt.Println("Task updated successfully.")
+    return taskToUpdate, nil
+
 }
 
 // HandleArchived archives a task
-func HandleArchived(taskID int) {
+func HandleArchived(taskID int) (*taskmodel.Task, error)  {
+
     tasks, err := taskstorage.ReadTasks()
+
     if err != nil {
-        fmt.Printf("Error reading tasks: %v\n", err)
-        return
+        return nil, fmt.Errorf("Error reading tasks: %v\n", err)
     }
 
     var taskToUpdate *taskmodel.Task
+
     for i := range tasks {
         if tasks[i].ID == taskID {
             taskToUpdate = &tasks[i]
@@ -157,53 +161,62 @@ func HandleArchived(taskID int) {
     }
 
     if taskToUpdate == nil {
-        fmt.Printf("Task ID %d not found\n", taskID)
-        return
+        return nil, fmt.Errorf("task ID %d not found", taskID)
+    }
+
+    taskToUpdate.Archived = true
+
+    if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
+        return nil, fmt.Errorf("Error updating task: %v\n", err)
+    }
+
+    // Update the task in storage if needed
+    if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
+        return nil, fmt.Errorf("error updating task: %w", err)
+    }
+
+    return taskToUpdate, nil
+}
+
+// HandleUnarchived unarchives a task
+func HandleUnarchived(taskID int) (*taskmodel.Task, error) {
+
+    tasks, err := taskstorage.ReadTasks()
+
+    if err != nil {
+        return nil, fmt.Errorf("Error reading tasks: %v\n", err)
+    }
+
+    var taskToUpdate *taskmodel.Task
+
+    for i := range tasks {
+        if tasks[i].ID == taskID {
+            taskToUpdate = &tasks[i]
+            break
+        }
+    }
+
+    if taskToUpdate == nil {
+        return nil, fmt.Errorf("task ID %d not found", taskID)
     }
 
     taskToUpdate.Archived = true
 
     if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
         fmt.Printf("Error updating task: %v\n", err)
-        return
+        return nil, fmt.Errorf("Error updating task: %v\n", err)
     }
 
-    fmt.Println("Task archived successfully.")
-}
-
-// HandleUnarchived unarchives a task
-func HandleUnarchived(taskID int) {
-    tasks, err := taskstorage.ReadTasks()
-    if err != nil {
-        fmt.Printf("Error reading tasks: %v\n", err)
-        return
-    }
-
-    var taskToUpdate *taskmodel.Task
-    for i := range tasks {
-        if tasks[i].ID == taskID {
-            taskToUpdate = &tasks[i]
-            break
-        }
-    }
-
-    if taskToUpdate == nil {
-        fmt.Printf("Task ID %d not found\n", taskID)
-        return
-    }
-
-    taskToUpdate.Archived = false
-
+    // Update the task in storage if needed
     if err := taskstorage.UpdateTask(*taskToUpdate); err != nil {
-        fmt.Printf("Error updating task: %v\n", err)
-        return
+        return nil, fmt.Errorf("error updating task: %w", err)
     }
 
-    fmt.Println("Task unarchived successfully.")
+    return taskToUpdate, nil
 }
 
 // HandleDelete deletes a task
-func HandleDelete(taskID int) {
+func HandleDelete(taskID int) (*taskmodel.Task, error) {
     tasks, err := taskstorage.ReadTasks()
     if err != nil {
         fmt.Printf("Error reading tasks: %v\n", err)
