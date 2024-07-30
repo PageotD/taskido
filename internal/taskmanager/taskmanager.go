@@ -216,11 +216,10 @@ func HandleUnarchived(taskID int) (*taskmodel.Task, error) {
 }
 
 // HandleDelete deletes a task
-func HandleDelete(taskID int) (*taskmodel.Task, error) {
+func HandleDelete(taskID int) (error) {
     tasks, err := taskstorage.ReadTasks()
     if err != nil {
-        fmt.Printf("Error reading tasks: %v\n", err)
-        return
+        return fmt.Errorf("Error reading tasks: %v\n", err)
     }
 
     var taskToDelete *taskmodel.Task
@@ -232,14 +231,13 @@ func HandleDelete(taskID int) (*taskmodel.Task, error) {
     }
 
     if taskToDelete == nil {
-        fmt.Printf("Task ID %d not found\n", taskID)
-        return
+        return fmt.Errorf("Task ID %d not found\n", taskID)
     }
 
     if err := taskstorage.DeleteTask(taskID); err != nil {
-        fmt.Printf("Error deleting task: %v\n", err)
-        return
+        return fmt.Errorf("Error deleting task: %v\n", err)
     }
 
     fmt.Println("Task deleted successfully.")
+    return nil
 }
