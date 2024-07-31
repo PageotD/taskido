@@ -123,7 +123,7 @@ func TestMarkUncomplete (t *testing.T) {
 	inputID := 3
 	newTaskList := MarkUncomplete(inputID, taskList)
 	if newTaskList[1].Completed != false {
-		t.Errorf("MarkUncomplete want complete = false")
+		t.Errorf("MarkUncomplete want completed = false")
 	}
 	if newTaskList[1].CompletedDate != "" {
 		t.Errorf("MarkUncomplete completedDate want empty string get %s", newTaskList[0].CompletedDate)
@@ -136,7 +136,17 @@ func TestMarkArchive (t *testing.T) {
 	inputID := 3
 	newTaskList := MarkArchive(inputID, taskList)
 	if newTaskList[1].Archived != true {
-		t.Errorf("MarkArchive want complete = true")
+		t.Errorf("MarkArchive want archived = true")
+	}
+
+}
+
+func TestMarkUnarchive (t *testing.T) {
+	taskList := setUpTestTaskList(t)
+	inputID := 4
+	newTaskList := MarkUnarchive(inputID, taskList)
+	if newTaskList[2].Archived != false {
+		t.Errorf("MarkUnarchive want archived = false")
 	}
 
 }
