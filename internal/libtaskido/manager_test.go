@@ -50,7 +50,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 	return initialData
 }
 
-func TestSearchByID_valid (t *testing.T) {
+func TestSearchByIDValid (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	ID, _ := searchByID(3, taskList)
 	if ID != 1 {
@@ -58,7 +58,7 @@ func TestSearchByID_valid (t *testing.T) {
 	}
 }
 
-func TestSearchByID_invalid (t *testing.T) {
+func TestSearchByIDInvalid (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	ID, err := searchByID(2, taskList)
 	if err == nil {
