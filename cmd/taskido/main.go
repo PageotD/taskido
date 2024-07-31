@@ -6,6 +6,7 @@ import (
 	"taskido/internal/taskmanager"
 	"taskido/internal/taskstorage"
 )
+
 func printHelp() {
 	fmt.Println("Usage:")
 	fmt.Println("  -add       : Adds a new task with the following text")
@@ -57,7 +58,7 @@ func main() {
 				return
 			}
 			fmt.Println("Task updated successfully.")
-		}	
+		}
 
 	} else if *uncompletedFlag != 0 {
 
@@ -93,7 +94,7 @@ func main() {
 		}
 
 	} else if *deleteFlag != 0 {
-		err := taskmanager.HandleDelete(*deleteFlag)	
+		err := taskmanager.HandleDelete(*deleteFlag)
 		if err != nil {
 			fmt.Printf("%v", err)
 		}
