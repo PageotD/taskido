@@ -41,7 +41,7 @@ func ParseNewTask(input []string) (Task, error) {
         Completed:     false,
         CompletedDate: "",
         Archived:      false,
-        Priority:    false,
+        Priority:      false,
         Notes:         nil,
     }
 

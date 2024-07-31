@@ -15,10 +15,10 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Projects:      []string{"taskido"},
 			Contexts:      []string{"taskstorage"},
 			Due:           "2024-08-30",
-			Completed:     true,
-			CompletedDate: "2024-08-28",
+			Completed:     false,
+			CompletedDate: "",
 			Archived:      false,
-			Priority:    false,
+			Priority:      false,
 			Notes:         nil,
 		},
 		{
@@ -31,7 +31,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Completed:     true,
 			CompletedDate: "2024-08-28",
 			Archived:      false,
-			Priority:    false,
+			Priority:      false,
 			Notes:         nil,
 		},
 		{
@@ -44,7 +44,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Completed:     true,
 			CompletedDate: "2024-08-28",
 			Archived:      false,
-			Priority:    false,
+			Priority:      false,
 			Notes:         nil,
 		},
 	}
@@ -114,6 +114,19 @@ func TestMarkComplete (t *testing.T) {
 	}
 	if newTaskList[0].CompletedDate != time.Now().Format("2006-01-02") {
 		t.Errorf("MarkComplete completedDate want %s get %s", time.Now().Format("2006-01-02"), newTaskList[0].CompletedDate)
+	}
+
+}
+
+func TestMarkUncomplete (t *testing.T) {
+	taskList := setUpTestTaskList(t)
+	inputID := 3
+	newTaskList := MarkComplete(inputID, taskList)
+	if newTaskList[0].Completed != false {
+		t.Errorf("MarkUncomplete want complete = false")
+	}
+	if newTaskList[0].CompletedDate != "" {
+		t.Errorf("MarkUncomplete completedDate want empty string get %s", newTaskList[0].CompletedDate)
 	}
 
 }
