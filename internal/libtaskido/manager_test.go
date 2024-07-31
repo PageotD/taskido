@@ -2,6 +2,7 @@ package libtaskido
 
 import (
 	"testing"
+	"time"
 )
 
 func setUpTestTaskList(t *testing.T) []Task {
@@ -102,4 +103,17 @@ func TestDeleteTask (t *testing.T) {
 	if newTaskList[0].ID != 3 {
 		t.Errorf("DeleteTaskwant newTaskList[0].ID = 3 get %d", newTaskList[0].ID)
 	}
+}
+
+func TestMarkComplete (t *testing.T) {
+	taskList := setUpTestTaskList(t)
+	inputID := 1
+	newTaskList := MarkComplete(inputID, taskList)
+	if newTaskList[0].Completed != true {
+		t.Errorf("MarkComplete want complete = true")
+	}
+	if newTaskList[0].CompletedDate != time.Now().Format("2006-01-02") {
+		t.Errorf("MarkComplete completedDate want %s get %s", time.Now().Format("2006-01-02"), newTaskList[0].CompletedDate)
+	}
+
 }
