@@ -91,3 +91,15 @@ func TestAddTask (t *testing.T) {
 		t.Errorf("AddTask want taskList[3].Contexts[0] = '@stuff' get %s", newTaskList[3].Contexts[0])
 	}
 }
+
+func TestDeleteTask (t *testing.T) {
+	taskList := setUpTestTaskList(t)
+	inputID := 1
+	newTaskList := DeleteTask(inputID, taskList)
+	if len(newTaskList) != 2 {
+		t.Errorf("DeleteTaskwant len(taskList)=2 get %d", len(newTaskList))
+	}
+	if newTaskList[0].ID != 3 {
+		t.Errorf("DeleteTaskwant newTaskList[0].ID = 3 get %d", newTaskList[0].ID)
+	}
+}
