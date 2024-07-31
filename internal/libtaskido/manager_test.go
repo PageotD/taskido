@@ -43,7 +43,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Due:           "2024-08-30",
 			Completed:     true,
 			CompletedDate: "2024-08-28",
-			Archived:      false,
+			Archived:      true,
 			Priority:      false,
 			Notes:         nil,
 		},
@@ -121,12 +121,22 @@ func TestMarkComplete (t *testing.T) {
 func TestMarkUncomplete (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	inputID := 3
-	newTaskList := MarkComplete(inputID, taskList)
-	if newTaskList[0].Completed != false {
+	newTaskList := MarkUncomplete(inputID, taskList)
+	if newTaskList[1].Completed != false {
 		t.Errorf("MarkUncomplete want complete = false")
 	}
-	if newTaskList[0].CompletedDate != "" {
+	if newTaskList[1].CompletedDate != "" {
 		t.Errorf("MarkUncomplete completedDate want empty string get %s", newTaskList[0].CompletedDate)
+	}
+
+}
+
+func TestMarkArchive (t *testing.T) {
+	taskList := setUpTestTaskList(t)
+	inputID := 3
+	newTaskList := MarkArchive(inputID, taskList)
+	if newTaskList[1].Archived != true {
+		t.Errorf("MarkArchive want complete = true")
 	}
 
 }
