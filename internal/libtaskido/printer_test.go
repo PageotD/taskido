@@ -1,4 +1,4 @@
-package formatter
+package libtaskido
 
 import (
 	"strings"
@@ -25,7 +25,7 @@ func TestApplyColorToDate(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.date, func(t *testing.T) {
-			result := ApplyColorToDate(tt.date)
+			result := applyColorToDate(tt.date)
 			if result != tt.expectation {
 				t.Errorf("applyColorToDate(%s) = %s; want %s", tt.date, result, tt.expectation)
 			}
@@ -45,7 +45,7 @@ func TestApplyColorToSubject(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.subject, func(t *testing.T) {
-			result := ApplyColorToSubject(tt.subject)
+			result := applyColorToSubject(tt.subject)
 			if result != tt.expectation {
 				t.Errorf("applyColorToSubject(%s) = %s; want %s", tt.subject, result, tt.expectation)
 			}
@@ -58,14 +58,14 @@ func TestApplyColorToProject(t *testing.T) {
 		projects    []string
 		expectation string
 	}{
-		{[]string{"acc", "work"}, "\033[35m+acc\033[0m \033[35m+work\033[0m"}, // Multiple projects
-		{[]string{"test"}, "\033[35m+test\033[0m"},                            // Single project
+		{[]string{"+acc", "+work"}, "\033[35m+acc\033[0m \033[35m+work\033[0m"}, // Multiple projects
+		{[]string{"+test"}, "\033[35m+test\033[0m"},                            // Single project
 		{[]string{}, ""}, // No projects
 	}
 
 	for _, tt := range tests {
 		t.Run(strings.Join(tt.projects, ", "), func(t *testing.T) {
-			result := ApplyColorToProject(tt.projects)
+			result := applyColorToProject(tt.projects)
 			if result != tt.expectation {
 				t.Errorf("applyColorToProject(%v) = %s; want %s", tt.projects, result, tt.expectation)
 			}

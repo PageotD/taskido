@@ -3,8 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"taskido/internal/taskmanager"
-	"taskido/internal/taskstorage"
+	"taskido/internal/libtaskido"
 )
 
 func printHelp() {
@@ -19,7 +18,19 @@ func printHelp() {
 	fmt.Println("  -help      : Displays this help message")
 }
 
+func initTaskido () []libtaskido.Task {
+	if !libtaskido.EnsureFileExists() {
+		err := libtaskido.InitializeFile()
+		if err != nil {
+			fmt.Printf("error creating file")
+		}
+	}
+	taskList, _ := libtaskido.LoadTasks()
+	return taskList
+}
+
 func main() {
+
 	addFlag := flag.Bool("add", false, "Adds a new task with the following text")
 	listFlag := flag.Bool("list", false, "Lists all tasks")
 	completedFlag := flag.Int("complete", 0, "Marks a task as complete, requires task ID")
@@ -31,76 +42,62 @@ func main() {
 
 	flag.Parse()
 
-	if *helpFlag {
+	taskList := initTaskido()
+
+    switch {
+    case *addFlag:
+		taskList = libtaskido.AddTask(flag.Args(), taskList)
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Task added succesfully.\n")
+    case *completedFlag != 0:
+        taskList = libtaskido.MarkComplete(*completedFlag, taskList)
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Task updated succesfully.\n")
+    case *uncompletedFlag != 0:
+        taskList = libtaskido.MarkUncomplete(*uncompletedFlag, taskList)
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Task updated succesfully.\n")
+    case *archivedFlag != 0:
+        taskList = libtaskido.MarkArchive(*archivedFlag, taskList)
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Task updated succesfully.\n")
+    case *unarchivedFlag != 0:
+        taskList = libtaskido.MarkUnarchive(*unarchivedFlag, taskList)
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Task updated succesfully.\n")
+    case *deleteFlag != 0:
+        taskList = libtaskido.DeleteTask(*deleteFlag, taskList)
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Task deleted succesfully.\n")
+	case *listFlag:
+		libtaskido.PrintTaskList(taskList)
+	case *helpFlag:
 		printHelp()
-		return
-	}
-
-	if *addFlag {
-
-		task, err := taskmanager.HandleAdd(flag.Args())
-		if err != nil {
-			fmt.Printf("Error adding task: %v\n", err)
-			return
-		}
-		if err := taskstorage.AddTask(task); err != nil {
-			fmt.Printf("Error adding task: %v\n", err)
-			return
-		}
-		fmt.Println("Task added to tasks.json")
-
-	} else if *completedFlag != 0 {
-
-		tasks, _ := taskmanager.HandleComplete(*completedFlag)
-		if tasks != nil {
-			if err := taskstorage.UpdateTask(*tasks); err != nil {
-				fmt.Printf("Error updating task: %v\n", err)
-				return
-			}
-			fmt.Println("Task updated successfully.")
-		}
-
-	} else if *uncompletedFlag != 0 {
-
-		tasks, _ := taskmanager.HandleUncomplete(*uncompletedFlag)
-		if tasks != nil {
-			if err := taskstorage.UpdateTask(*tasks); err != nil {
-				fmt.Printf("Error updating task: %v\n", err)
-				return
-			}
-			fmt.Println("Task updated successfully.")
-		}
-
-	} else if *archivedFlag != 0 {
-
-		tasks, _ := taskmanager.HandleArchived(*archivedFlag)
-		if tasks != nil {
-			if err := taskstorage.UpdateTask(*tasks); err != nil {
-				fmt.Printf("Error updating task: %v\n", err)
-				return
-			}
-			fmt.Println("Task updated successfully.")
-		}
-
-	} else if *unarchivedFlag != 0 {
-
-		tasks, _ := taskmanager.HandleUnarchived(*archivedFlag)
-		if tasks != nil {
-			if err := taskstorage.UpdateTask(*tasks); err != nil {
-				fmt.Printf("Error updating task: %v\n", err)
-				return
-			}
-			fmt.Println("Task updated successfully.")
-		}
-
-	} else if *deleteFlag != 0 {
-		err := taskmanager.HandleDelete(*deleteFlag)
-		if err != nil {
-			fmt.Printf("%v", err)
-		}
-	} else if *listFlag {
-		taskmanager.HandleList()
-	} else {
-		fmt.Println("No valid flag provided. Use -help to display the usage information.")
-	}
+    default:
+        fmt.Println("No valid flag provided. Use -a to add a task or -l to list tasks.")
+    }
 }

@@ -1,9 +1,10 @@
-package formatter
+package libtaskido
 
 import (
-	"regexp"
+	"fmt"
 	"strings"
 	"time"
+	"regexp"
 )
 
 // ANSI color codes
@@ -17,7 +18,7 @@ const (
 )
 
 // applyColorToDate applies color based on the date's proximity to today
-func ApplyColorToDate(dueDate string) string {
+func applyColorToDate(dueDate string) string {
 	// Parse the due date
 	date, err := time.Parse("2006-01-02", dueDate)
 	if err != nil {
@@ -40,23 +41,44 @@ func ApplyColorToDate(dueDate string) string {
 }
 
 // Helper function to apply color to the contexts
-//func applyColorToDate(subject string) string {
-// Replace @ followed by any characters with blue color
-//	return regexp.MustCompile(`@(\S+)`).ReplaceAllString(subject, Blue+"@$1"+Reset)
-//}
-
-// Helper function to apply color to the contexts
-func ApplyColorToSubject(subject string) string {
+func applyColorToSubject(subject string) string {
 	// Replace @ followed by any characters with blue color
 	return regexp.MustCompile(`@(\S+)`).ReplaceAllString(subject, Blue+"@$1"+Reset)
 }
 
 // Helper function to apply color to the project names
-func ApplyColorToProject(projectList []string) string {
+func applyColorToProject(projectList []string) string {
 	var coloredProjects []string
 	for _, project := range projectList {
-		coloredProjects = append(coloredProjects, Violet+"+"+project+Reset)
+		coloredProjects = append(coloredProjects, Violet+project+Reset)
 	}
 	// Join colored projects with a space
 	return strings.Join(coloredProjects, " ")
+}
+
+// HandleList lists all tasks
+func PrintTaskList(taskList []Task) {
+
+    fmt.Printf("\n\033[4mCurrent:\033[0m\n\n")
+    for _, task := range taskList {
+        if !task.Completed && !task.Archived {
+            fmt.Printf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+        }
+    }
+
+    fmt.Printf("\n\033[4mCompleted:\033[0m\n\n")
+    for _, task := range taskList {
+        if task.Completed && !task.Archived {
+            fmt.Printf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+        }
+    }
+
+    fmt.Printf("\n\033[4mArchived:\033[0m\n\n")
+    for _, task := range taskList {
+        if task.Archived {
+            fmt.Printf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+        }
+    }
+
+    fmt.Printf("\n")
 }
