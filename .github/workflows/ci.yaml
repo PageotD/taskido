@@ -62,8 +62,11 @@ jobs:
         run: ls -R bin/
       - name: Zip bin directories
         run: |
-          for dir in bin/*/; do \
-            zip -r "${dir%/}.zip" "$dir"; \
+          VERSION=$(cat version.txt)
+          cd bin
+          for dir in taskido-${VERSION}-*/; do \
+          dir_name="${dir%/}"; \
+          zip -j "${dir_name}.zip" "$dir/taskido"; \
           done
       - name: Create Release
         uses: softprops/action-gh-release@v1
