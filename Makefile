@@ -7,20 +7,18 @@ INT_PKG = $(wildcard $(INT_DIR)/*)
 BIN_NAME = taskido
 PRF_DIR = profiling
 BUILD_FLAGS = -ldflags="-s -w" -a -tags netgo -installsuffix netgo
+VERSION = $(shell cat version.txt)
 
 # Targets
 all: build
 
-# Create necessary directories
-mkdirs:
-	mkdir -p $(BIN_DIR)
-
 # Compile for specified OS and ARCH
 build-for-os-arch:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(BIN_NAME)-$(GOOS)-$(GOARCH) $(BUILD_FLAGS)
+	mkdir -p $(BIN_DIR)/taskido-$(VERSION)-$(GOOS)-$(GOARCH)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/taskido-$(VERSION)-$(GOOS)-$(GOARCH)/$(BIN_NAME) $(BUILD_FLAGS)
 
 # Compile for all platforms
-build: mkdirs
+build:
 	$(MAKE) build-for-os-arch GOOS=linux GOARCH=amd64
 	$(MAKE) build-for-os-arch GOOS=windows GOARCH=amd64
 	$(MAKE) build-for-os-arch GOOS=darwin GOARCH=amd64

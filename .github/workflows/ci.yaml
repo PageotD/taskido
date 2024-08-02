@@ -60,9 +60,14 @@ jobs:
           path: bin
       - name: List bin directory
         run: ls -R bin/
+      - name: Zip bin directories
+        run: |
+          for dir in bin/*/; do \
+            zip -r "${dir%/}.zip" "$dir"; \
+          done
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: bin/*  # Adjusted to pick up files and directories within bin/
+          files: bin/*.zip  # Adjusted to pick up files and directories within bin/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
