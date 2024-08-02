@@ -57,6 +57,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: bin
+          path: bin
       - name: List bin directory
         run: ls -R bin/
       - name: Create Release
