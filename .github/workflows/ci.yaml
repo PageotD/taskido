@@ -40,9 +40,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: bin
-          path: bin/
+          path: bin
       - name: List bin directory
-        run: ls -R bin/
+        run: ls -R bin
 
   release:
     runs-on: ubuntu-latest
@@ -62,6 +62,6 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: bin/**  # Adjusted to pick up files and directories within bin/
+          files: bin/*  # Adjusted to pick up files and directories within bin/
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
