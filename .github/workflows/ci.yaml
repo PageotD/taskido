@@ -14,6 +14,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # To access the repository contents
     steps:
       - uses: actions/checkout@v4
       - name: Setup Go
@@ -27,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     permissions:
-      contents: write
+      contents: write  # To create and modify files
     steps:
       - uses: actions/checkout@v4
       - name: Setup Go
@@ -36,22 +38,45 @@ jobs:
           go-version: '1.22.x'
       - name: Build
         run: make build
+      - name: Create Zip Artifacts
+        run: |
+          # Change to bin directory
+          cd bin
+          
+          # Loop through each directory and create a zip file
+          for dir in */ ; do
+            dir=${dir%*/}
+            echo "Creating zip for $dir"
+            zip -r "${dir}.zip" "$dir"
+            # Upload the zip files as artifacts
+            echo "Uploading $dir.zip"
+            mkdir -p ../artifacts
+            mv "${dir}.zip" ../artifacts/
+          done
+        # Ensure artifacts folder is available for upload step
+        working-directory: bin
 
   release:
     runs-on: ubuntu-latest
     needs: build
-    permissions:
-      contents: write
     if: startsWith(github.ref, 'refs/tags/')  # Check if the ref is a tag
+    permissions:
+      contents: write  # To create a release and attach assets
+      packages: write  # To upload packages
     steps:
       - uses: actions/checkout@v4
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.x'
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: bin-artifacts
+          path: artifacts/
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          files: bin/*
+          files: artifacts/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
