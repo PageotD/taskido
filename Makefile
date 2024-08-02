@@ -13,14 +13,11 @@ all: build
 
 # Create necessary directories
 mkdirs:
-	mkdir -p $(BIN_DIR)/linux-amd64
-	mkdir -p $(BIN_DIR)/windows-amd64
-	mkdir -p $(BIN_DIR)/darwin-amd64
-	mkdir -p $(PRF_DIR)
+	mkdir -p $(BIN_DIR)
 
 # Compile for specified OS and ARCH
 build-for-os-arch:
-	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(GOOS)-$(GOARCH)/$(BIN_NAME) $(BUILD_FLAGS)
+	GOOS=$(GOOS) GOARCH=$(GOARCH) $(GO_CMD) build -C $(SRC_DIR) -o ../../$(BIN_DIR)/$(BIN_NAME)-$(GOOS)-$(GOARCH) $(BUILD_FLAGS)
 
 # Compile for all platforms
 build: mkdirs
@@ -43,6 +40,6 @@ test: test-cmd test-internal
 
 # Clean build artifacts
 clean:
-	rm -rf $(BIN_DIR)/*-amd64
+	rm -f $(BIN_DIR)/*
 
 .PHONY: all build clean test test-cmd test-internal
