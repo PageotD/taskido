@@ -84,7 +84,9 @@ func main() {
 	case *listFlag:
 		if len(flag.Args()) > 0 && flag.Args()[0] == "projects"  {
 			libtaskido.PrintTaskListByProjects(taskList)
-		} else {
+		} else if len(flag.Args()) > 0 && flag.Args()[0] == "contexts"  {
+			libtaskido.PrintTaskListByContexts(taskList)
+		}else {
 			libtaskido.PrintTaskList(taskList)
 		}
 	// Print help

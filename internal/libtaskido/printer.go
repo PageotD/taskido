@@ -109,3 +109,25 @@ func PrintTaskListByProjects(taskList []Task) {
 		fmt.Println()
 	}
 }
+
+// PrintTaskListByContexts lists all tasks grouped by their associated contexts.
+func PrintTaskListByContexts(taskList []Task) {
+	// Use a map to collect unique contexts
+	contextTasks := make(map[string][]Task)
+
+	// Iterate through tasks and collect projects
+	for _, task := range taskList {
+		for _, context := range task.Contexts {
+			contextTasks[context] = append(contextTasks[context], task)
+		}
+	}
+
+	// Print tasks grouped by projects
+	for context, tasks := range contextTasks {
+		fmt.Printf("\033[34m%s\033[0m\n", context)
+		for _, task := range tasks {
+			fmt.Printf(formatTask(task)) 
+		}
+		fmt.Println()
+	}
+}
