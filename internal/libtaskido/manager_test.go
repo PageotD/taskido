@@ -19,7 +19,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			CompletedDate: "",
 			Archived:      false,
 			Priority:      0,
-			Notes:         nil,
+			CreatedAt:     "2024-08-30 15:04:05",
 		},
 		{
 			ID:            3,
@@ -32,7 +32,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			CompletedDate: "2024-08-28",
 			Archived:      false,
 			Priority:      0,
-			Notes:         nil,
+			CreatedAt:     "2024-08-30 15:04:05",
 		},
 		{
 			ID:            4,
@@ -45,7 +45,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			CompletedDate: "2024-08-28",
 			Archived:      true,
 			Priority:      0,
-			Notes:         nil,
+			CreatedAt:     "2024-08-30 15:04:05",
 		},
 	}
 	return initialData

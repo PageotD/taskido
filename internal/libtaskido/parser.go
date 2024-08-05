@@ -2,6 +2,7 @@ package libtaskido
 
 import (
 	"fmt"
+    "time"
 	"strings"
 	"regexp"
 	"github.com/google/uuid"
@@ -48,7 +49,8 @@ func ParseNewTask(input []string) (Task, error) {
         CompletedDate: "",
         Archived:      false,
         Priority:      priority,
-        Notes:         nil,
+        CreatedAt:     time.Now().Format("2006-01-02 15:04:05"),
+        UpdatedAt:     "",
     }
 
     return task, nil

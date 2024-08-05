@@ -12,5 +12,6 @@ type Task struct {
 	CompletedDate string   `json:"completedDate"`
 	Archived      bool     `json:"archived"`
 	Priority      int      `json:"priority"`
-	Notes         []string `json:"notes"`
+	CreatedAt     string   `json:"createdAt`
+	UpdatedAt     string   `json:"createdAt`
 }

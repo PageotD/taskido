@@ -55,6 +55,7 @@ func MarkComplete(inputID int, taskList []Task) []Task {
 	}
 	taskList[id].Completed = true
 	taskList[id].CompletedDate = time.Now().Format("2006-01-02")
+	taskList[id].UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
 
 	return taskList
 }
@@ -68,6 +69,7 @@ func MarkUncomplete(inputID int, taskList []Task) []Task {
 	}
 	taskList[id].Completed = false
 	taskList[id].CompletedDate = ""
+	taskList[id].UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
 
 	return taskList
 }
@@ -80,6 +82,7 @@ func MarkArchive(inputID int, taskList []Task) []Task {
 		return taskList
 	}
 	taskList[id].Archived = true
+	taskList[id].UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
 
 	return taskList
 }
@@ -92,6 +95,7 @@ func MarkUnarchive(inputID int, taskList []Task) []Task {
 		return taskList
 	}
 	taskList[id].Archived = false
+	taskList[id].UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
 
 	return taskList
 }
