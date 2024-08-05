@@ -82,7 +82,11 @@ func main() {
 		taskModification = true
 	// List all tasks
 	case *listFlag:
-		libtaskido.PrintTaskList(taskList)
+		if len(flag.Args()) > 0 && flag.Args()[0] == "projects"  {
+			libtaskido.PrintTaskListByProjects(taskList)
+		} else {
+			libtaskido.PrintTaskList(taskList)
+		}
 	// Print help
 	case *helpFlag:
 		printHelp()

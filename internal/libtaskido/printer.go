@@ -61,7 +61,7 @@ func formatTask(task Task) string {
 	return fmt.Sprintf("%-4d %-12s %-1d %s %s\n", task.ID, applyColorToDate(task.Due), task.Priority, applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
 }
 
-// HandleList lists all tasks
+// PrintTaskList lists all tasks
 func PrintTaskList(taskList []Task) {
 
     fmt.Printf("\n\033[4mCurrent:\033[0m\n\n")
@@ -86,4 +86,26 @@ func PrintTaskList(taskList []Task) {
     }
 
     fmt.Printf("\n")
+}
+
+// PrintTaskListByProjects lists all tasks grouped by their associated projects.
+func PrintTaskListByProjects(taskList []Task) {
+	// Use a map to collect unique projects
+	projectTasks := make(map[string][]Task)
+
+	// Iterate through tasks and collect projects
+	for _, task := range taskList {
+		for _, project := range task.Projects {
+			projectTasks[project] = append(projectTasks[project], task)
+		}
+	}
+
+	// Print tasks grouped by projects
+	for project, tasks := range projectTasks {
+		fmt.Printf("\033[35m%s\033[0m\n", project)
+		for _, task := range tasks {
+			fmt.Printf(formatTask(task)) 
+		}
+		fmt.Println()
+	}
 }
