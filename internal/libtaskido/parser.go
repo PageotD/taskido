@@ -17,6 +17,8 @@ func ParseNewTask(input []string) (Task, error) {
 	contexts := extractContexts(inputTask)
 	// extract due date
 	dueDate := extractDueDate(inputTask)
+    // extract priority level
+    priority := extractPriority(inputTask)
 
 	// Clean up description
 	taskDescription := inputTask
@@ -26,6 +28,10 @@ func ParseNewTask(input []string) (Task, error) {
 	if dueDate != "" {
         taskDescription = strings.Replace(taskDescription, "due:"+dueDate, "", 1)
     }
+    // remove priority from input task
+    pattern := regexp.MustCompile(`\s*priority:\d+`)
+    taskDescription = pattern.ReplaceAllString(inputTask, "")
+
     taskDescription = strings.TrimSpace(taskDescription)
 
 	if taskDescription == "" {
@@ -41,7 +47,7 @@ func ParseNewTask(input []string) (Task, error) {
         Completed:     false,
         CompletedDate: "",
         Archived:      false,
-        Priority:      0,
+        Priority:      priority,
         Notes:         nil,
     }
 
@@ -88,6 +94,33 @@ func extractDueDate(input string) string {
         return match[1]
     }
     return ""
+}
+
+// extractPriority extracts and converts the priority level from a string input
+func extractPriority(input string) int {
+	// Define regular expressions for different priority formats
+	patterns := []struct {
+		Pattern string
+		Value   int
+	}{
+		{Pattern: `\b1\b`, Value: 1},              // Matches '1'
+		{Pattern: `\blow\b`, Value: 1},           // Matches 'low'
+		{Pattern: `\b2\b`, Value: 2},              // Matches '2'
+		{Pattern: `\bmedium\b`, Value: 2},        // Matches 'medium'
+		{Pattern: `\b3\b`, Value: 3},              // Matches '3'
+		{Pattern: `\bhigh\b`, Value: 3},           // Matches 'high'
+	}
+
+	// Iterate over the patterns and check for matches in the input string
+	for _, p := range patterns {
+		re := regexp.MustCompile(p.Pattern)
+		if re.MatchString(input) {
+			return p.Value
+		}
+	}
+
+	// Return 0 if no match is found
+	return 0
 }
 
 func flattenString(ss [][]string ) []string {

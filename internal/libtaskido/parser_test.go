@@ -177,3 +177,32 @@ func TestExtractDueDate(t *testing.T) {
         assert.Equal(t, test.expected, result, "For input %s", test.input)
     }
 }
+
+func TestExtractPriority(t *testing.T) {
+    tests := []struct {
+		name     string
+        input    string
+        expected int
+    }{
+        {
+			name: "Valid priority",
+            input:    "Task priority:1",
+            expected: 1,
+        },
+        {
+			name: "No priority",
+            input:    "No priority here",
+            expected: 0,
+        },
+        {
+			name: "Invalid priority",
+            input:    "Invalid priority:9",
+            expected: 0, // Even if invalid date, pattern match is correct
+        },
+    }
+
+    for _, test := range tests {
+        result := extractPriority(test.input)
+        assert.Equal(t, test.expected, result, "For input %s", test.input)
+    }
+}

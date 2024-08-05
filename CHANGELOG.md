@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 * add a formatter function for printer.go
 
+### Changed
+* change priority from bool to int to handle priority levels
+
 ## [0.1.0] - 2024-08-02
 
 **-- INITIAL RELEASE --**
