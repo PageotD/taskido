@@ -18,7 +18,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Completed:     false,
 			CompletedDate: "",
 			Archived:      false,
-			Priority:      false,
+			Priority:      0,
 			Notes:         nil,
 		},
 		{
@@ -31,7 +31,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Completed:     true,
 			CompletedDate: "2024-08-28",
 			Archived:      false,
-			Priority:      false,
+			Priority:      0,
 			Notes:         nil,
 		},
 		{
@@ -44,7 +44,7 @@ func setUpTestTaskList(t *testing.T) []Task {
 			Completed:     true,
 			CompletedDate: "2024-08-28",
 			Archived:      true,
-			Priority:      false,
+			Priority:      0,
 			Notes:         nil,
 		},
 	}
