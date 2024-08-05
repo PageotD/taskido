@@ -52,63 +52,34 @@ func main() {
 
 	// Initialize task list
 	taskList := initTaskido()
+	taskModification := false
 
 	// Execute command based on flags
     switch {
 	// Add a new task
     case *addFlag:
 		taskList = libtaskido.AddTask(flag.Args(), taskList)
-		err := libtaskido.SaveTasks(taskList)
-		if err != nil {
-			fmt.Printf("error during save %v", err)
-			return
-		}
-		fmt.Printf("Task added succesfully.\n")
+		taskModification = true
 	// Marks a task as complete
     case *completedFlag != 0:
         taskList = libtaskido.MarkComplete(*completedFlag, taskList)
-		err := libtaskido.SaveTasks(taskList)
-		if err != nil {
-			fmt.Printf("error during save %v", err)
-			return
-		}
-		fmt.Printf("Task updated succesfully.\n")
+		taskModification = true
 	// Marks a task as uncompleted
     case *uncompletedFlag != 0:
         taskList = libtaskido.MarkUncomplete(*uncompletedFlag, taskList)
-		err := libtaskido.SaveTasks(taskList)
-		if err != nil {
-			fmt.Printf("error during save %v", err)
-			return
-		}
-		fmt.Printf("Task updated succesfully.\n")
+		taskModification = true
 	// Marks a task as archived
     case *archivedFlag != 0:
         taskList = libtaskido.MarkArchive(*archivedFlag, taskList)
-		err := libtaskido.SaveTasks(taskList)
-		if err != nil {
-			fmt.Printf("error during save %v", err)
-			return
-		}
-		fmt.Printf("Task updated succesfully.\n")
+		taskModification = true
 	// Marks a task as unarchived
     case *unarchivedFlag != 0:
         taskList = libtaskido.MarkUnarchive(*unarchivedFlag, taskList)
-		err := libtaskido.SaveTasks(taskList)
-		if err != nil {
-			fmt.Printf("error during save %v", err)
-			return
-		}
-		fmt.Printf("Task updated succesfully.\n")
+		taskModification = true
 	// Delete a task
     case *deleteFlag != 0:
         taskList = libtaskido.DeleteTask(*deleteFlag, taskList)
-		err := libtaskido.SaveTasks(taskList)
-		if err != nil {
-			fmt.Printf("error during save %v", err)
-			return
-		}
-		fmt.Printf("Task deleted succesfully.\n")
+		taskModification = true
 	// List all tasks
 	case *listFlag:
 		libtaskido.PrintTaskList(taskList)
@@ -119,4 +90,13 @@ func main() {
     default:
         fmt.Println("No valid flag provided. Use --help.")
     }
+
+	if taskModification {
+		err := libtaskido.SaveTasks(taskList)
+		if err != nil {
+			fmt.Printf("error during save %v", err)
+			return
+		}
+		fmt.Printf("Tasklist updated succesfully.\n")
+	}
 }
