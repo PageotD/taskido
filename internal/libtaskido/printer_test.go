@@ -72,3 +72,46 @@ func TestApplyColorToProject(t *testing.T) {
 		})
 	}
 }
+
+func TestFormatTask(t *testing.T) {
+	tests := []struct {
+		task     Task
+		expected string
+	}{
+		{
+			task: Task{
+				ID:        1,
+				Due:       "2024-07-24",
+				Projects:  []string{"project1", "project2"},
+				Subject:   "@context1 Do something",
+				Completed: false,
+				Archived:  false,
+			},
+			expected: "1    \x1b[31m2024-07-24\x1b[0m " +
+				"\x1b[35mproject1\x1b[0m \x1b[35mproject2\x1b[0m " +
+				"\x1b[34m@context1\x1b[0m Do something\n",
+		},
+		{
+			task: Task{
+				ID:        2,
+				Due:       "2024-07-23",
+				Projects:  []string{"project3"},
+				Subject:   "@context2 Another task",
+				Completed: true,
+				Archived:  false,
+			},
+			expected: "2    \x1b[31m2024-07-23\x1b[0m " +
+				"\x1b[35mproject3\x1b[0m " +
+				"\x1b[34m@context2\x1b[0m Another task\n",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("", func(t *testing.T) {
+			got := formatTask(tt.task)
+			if got != tt.expected {
+				t.Errorf("formatTask() = %v, want %v", got, tt.expected)
+			}
+		})
+	}
+}
