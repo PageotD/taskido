@@ -56,28 +56,33 @@ func applyColorToProject(projectList []string) string {
 	return strings.Join(coloredProjects, " ")
 }
 
+// formatTask formats a single task into a string with a specific layout and color coding.
+func formatTask(task Task) string {
+	return fmt.Sprintf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+}
+
 // HandleList lists all tasks
 func PrintTaskList(taskList []Task) {
 
     fmt.Printf("\n\033[4mCurrent:\033[0m\n\n")
     for _, task := range taskList {
         if !task.Completed && !task.Archived {
-            fmt.Printf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+            fmt.Printf(formatTask(task))
         }
     }
 
     fmt.Printf("\n\033[4mCompleted:\033[0m\n\n")
     for _, task := range taskList {
         if task.Completed && !task.Archived {
-            fmt.Printf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
-        }
+			fmt.Printf(formatTask(task))       
+		}
     }
 
     fmt.Printf("\n\033[4mArchived:\033[0m\n\n")
     for _, task := range taskList {
         if task.Archived {
-            fmt.Printf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
-        }
+			fmt.Printf(formatTask(task))        
+		}
     }
 
     fmt.Printf("\n")
