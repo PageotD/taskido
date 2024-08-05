@@ -6,6 +6,7 @@ import (
 	"taskido/internal/libtaskido"
 )
 
+// printHelp displays a help message that provides usage instructions for the command-line tool.
 func printHelp() {
 	fmt.Println("Usage:")
 	fmt.Println("  -add       : Adds a new task with the following text")
@@ -18,6 +19,8 @@ func printHelp() {
 	fmt.Println("  -help      : Displays this help message")
 }
 
+// initTaskido initializes the task management system by ensuring that the necessary file exists,
+// and then loads the current list of tasks. If the file does not exist, it creates it.
 func initTaskido () []libtaskido.Task {
 	if !libtaskido.EnsureFileExists() {
 		err := libtaskido.InitializeFile()
@@ -29,9 +32,13 @@ func initTaskido () []libtaskido.Task {
 	return taskList
 }
 
+// main parses command-line flags to determine which operation to perform (e.g., add, complete, delete),
+// then executes the corresponding function to manipulate the task list. It also handles the loading and saving
+// of tasks.
 func main() {
 
-	addFlag := flag.Bool("add", false, "Adds a new task with the following text")
+	// Define command-line flags
+	addFlag := flag.Bool("add", false, "Adds a new task")
 	listFlag := flag.Bool("list", false, "Lists all tasks")
 	completedFlag := flag.Int("complete", 0, "Marks a task as complete, requires task ID")
 	uncompletedFlag := flag.Int("uncomplete", 0, "Marks a task as uncompleted, requires task ID")
@@ -40,11 +47,15 @@ func main() {
 	deleteFlag := flag.Int("delete", 0, "Deletes a task, requires task ID")
 	helpFlag := flag.Bool("help", false, "Display help message")
 
+	// Parse command-line flags
 	flag.Parse()
 
+	// Initialize task list
 	taskList := initTaskido()
 
+	// Execute command based on flags
     switch {
+	// Add a new task
     case *addFlag:
 		taskList = libtaskido.AddTask(flag.Args(), taskList)
 		err := libtaskido.SaveTasks(taskList)
@@ -53,6 +64,7 @@ func main() {
 			return
 		}
 		fmt.Printf("Task added succesfully.\n")
+	// Marks a task as complete
     case *completedFlag != 0:
         taskList = libtaskido.MarkComplete(*completedFlag, taskList)
 		err := libtaskido.SaveTasks(taskList)
@@ -61,6 +73,7 @@ func main() {
 			return
 		}
 		fmt.Printf("Task updated succesfully.\n")
+	// Marks a task as uncompleted
     case *uncompletedFlag != 0:
         taskList = libtaskido.MarkUncomplete(*uncompletedFlag, taskList)
 		err := libtaskido.SaveTasks(taskList)
@@ -69,6 +82,7 @@ func main() {
 			return
 		}
 		fmt.Printf("Task updated succesfully.\n")
+	// Marks a task as archived
     case *archivedFlag != 0:
         taskList = libtaskido.MarkArchive(*archivedFlag, taskList)
 		err := libtaskido.SaveTasks(taskList)
@@ -77,6 +91,7 @@ func main() {
 			return
 		}
 		fmt.Printf("Task updated succesfully.\n")
+	// Marks a task as unarchived
     case *unarchivedFlag != 0:
         taskList = libtaskido.MarkUnarchive(*unarchivedFlag, taskList)
 		err := libtaskido.SaveTasks(taskList)
@@ -85,6 +100,7 @@ func main() {
 			return
 		}
 		fmt.Printf("Task updated succesfully.\n")
+	// Delete a task
     case *deleteFlag != 0:
         taskList = libtaskido.DeleteTask(*deleteFlag, taskList)
 		err := libtaskido.SaveTasks(taskList)
@@ -93,11 +109,14 @@ func main() {
 			return
 		}
 		fmt.Printf("Task deleted succesfully.\n")
+	// List all tasks
 	case *listFlag:
 		libtaskido.PrintTaskList(taskList)
+	// Print help
 	case *helpFlag:
 		printHelp()
+	// Default 
     default:
-        fmt.Println("No valid flag provided. Use -a to add a task or -l to list tasks.")
+        fmt.Println("No valid flag provided. Use --help.")
     }
 }
