@@ -63,7 +63,7 @@ func extractMatches(matches [][]string) []string {
     return result
 }
 
-func extractProjects (input string) []string {
+func extractProjects(input string) []string {
 
     pattern := regexp.MustCompile(`\+\S+`)
     matches := pattern.FindAllStringSubmatch(input, -1)
@@ -71,7 +71,7 @@ func extractProjects (input string) []string {
     return flattenString(matches)
 }
 
-func extractContexts (input string) []string {
+func extractContexts(input string) []string {
 
     pattern := regexp.MustCompile(`\@\S+`)
     matches := pattern.FindAllStringSubmatch(input, -1)
@@ -79,7 +79,7 @@ func extractContexts (input string) []string {
     return flattenString(matches)
 }
 
-func extractDueDate (input string) string {
+func extractDueDate(input string) string {
 
     pattern := regexp.MustCompile(`due:(\d{4}-\d{2}-\d{2})`)
     match := pattern.FindStringSubmatch(input)
@@ -90,7 +90,7 @@ func extractDueDate (input string) string {
     return ""
 }
 
-func flattenString (ss [][]string ) []string {
+func flattenString(ss [][]string ) []string {
     var result []string
     for _, s := range ss {
         result = append(result, s...)
