@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
  
 ## [Unreleased]
 
+### Added
+* add a formatter function for printer.go
 
 ## [0.1.0] - 2024-08-02
 
