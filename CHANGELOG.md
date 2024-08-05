@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 * add a formatter function for printer.go
+* add `priority:` as an input when adding a task
 
 ### Changed
 * change priority from bool to int to handle priority levels

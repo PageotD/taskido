@@ -58,7 +58,7 @@ func applyColorToProject(projectList []string) string {
 
 // formatTask formats a single task into a string with a specific layout and color coding.
 func formatTask(task Task) string {
-	return fmt.Sprintf("%-4d %-12s %s %s\n", task.ID, applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+	return fmt.Sprintf("%-4d %-12s %-1d %s %s\n", task.ID, applyColorToDate(task.Due), task.Priority, applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
 }
 
 // HandleList lists all tasks

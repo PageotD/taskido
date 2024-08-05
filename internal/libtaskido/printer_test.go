@@ -86,8 +86,9 @@ func TestFormatTask(t *testing.T) {
 				Subject:   "@context1 Do something",
 				Completed: false,
 				Archived:  false,
+				Priority:  0,
 			},
-			expected: "1    \x1b[31m2024-07-24\x1b[0m " +
+			expected: "1    \x1b[31m2024-07-24\x1b[0m " + "0 " +
 				"\x1b[35mproject1\x1b[0m \x1b[35mproject2\x1b[0m " +
 				"\x1b[34m@context1\x1b[0m Do something\n",
 		},
@@ -99,8 +100,9 @@ func TestFormatTask(t *testing.T) {
 				Subject:   "@context2 Another task",
 				Completed: true,
 				Archived:  false,
+				Priority:  3,
 			},
-			expected: "2    \x1b[31m2024-07-23\x1b[0m " +
+			expected: "2    \x1b[31m2024-07-23\x1b[0m " + "3 " +
 				"\x1b[35mproject3\x1b[0m " +
 				"\x1b[34m@context2\x1b[0m Another task\n",
 		},
