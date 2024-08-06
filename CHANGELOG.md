@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * add `priority:` as an input when adding a task
 * add CreatedAt and UpdatedAt field in Task struct
 * add the possibility to list task by projects
+* add the possibility to list task by contexts
 
 ### Changed
 * change priority from bool to int to handle priority levels

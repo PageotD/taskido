@@ -61,31 +61,40 @@ func formatTask(task Task) string {
 	return fmt.Sprintf("%-4d %-12s %-1d %s %s\n", task.ID, applyColorToDate(task.Due), task.Priority, applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
 }
 
-// PrintTaskList lists all tasks
+// PrintTaskList lists all tasks grouped by their status (current, completed, archived)
 func PrintTaskList(taskList []Task) {
+	// Use map to collect projects by status
+	statusTasks := make(map[string][]Task)
 
-    fmt.Printf("\n\033[4mCurrent:\033[0m\n\n")
-    for _, task := range taskList {
-        if !task.Completed && !task.Archived {
-            fmt.Printf(formatTask(task))
-        }
-    }
-
-    fmt.Printf("\n\033[4mCompleted:\033[0m\n\n")
-    for _, task := range taskList {
-        if task.Completed && !task.Archived {
-			fmt.Printf(formatTask(task))       
+	// Iterate through tasks and collect projects
+	for _, task := range taskList {
+		if task.Archived {
+			statusTasks["archived"] = append(statusTasks["archived"], task)
+		} else if !task.Archived && task.Completed {
+			statusTasks["completed"] = append(statusTasks["completed"], task)
+		} else {
+			statusTasks["current"] = append(statusTasks["current"], task)
 		}
-    }
+	}
 
-    fmt.Printf("\n\033[4mArchived:\033[0m\n\n")
-    for _, task := range taskList {
-        if task.Archived {
-			fmt.Printf(formatTask(task))        
-		}
-    }
+	// Print tasks grouped by status
+	fmt.Printf("\033[4mCurrent:\033[0m\n")
+	for _, task := range statusTasks["current"] {
+		fmt.Printf(formatTask(task)) 
+	}
+	fmt.Println()
+	
+	fmt.Printf("\033[4mCompleted:\033[0m\n")
+	for _, task := range statusTasks["completed"] {
+		fmt.Printf(formatTask(task)) 
+	}
+	fmt.Println()
 
-    fmt.Printf("\n")
+	fmt.Printf("\033[4mArchived:\033[0m\n")
+	for _, task := range statusTasks["archived"] {
+		fmt.Printf(formatTask(task)) 
+	}
+	fmt.Println()
 }
 
 // PrintTaskListByProjects lists all tasks grouped by their associated projects.
