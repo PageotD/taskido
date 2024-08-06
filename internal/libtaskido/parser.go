@@ -31,7 +31,7 @@ func ParseNewTask(input []string) (Task, error) {
     }
     // remove priority from input task
     pattern := regexp.MustCompile(`\s*priority:\d+`)
-    taskDescription = pattern.ReplaceAllString(inputTask, "")
+    taskDescription = pattern.ReplaceAllString(taskDescription, "")
 
     taskDescription = strings.TrimSpace(taskDescription)
 
