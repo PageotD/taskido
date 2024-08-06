@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * add CreatedAt and UpdatedAt field in Task struct
 * add the possibility to list task by projects
 * add the possibility to list task by contexts
+* render priority level using unicode and ANSI colors
 
 ### Changed
 * change priority from bool to int to handle priority levels

@@ -22,7 +22,7 @@ func applyColorToDate(dueDate string) string {
 	// Parse the due date
 	date, err := time.Parse("2006-01-02", dueDate)
 	if err != nil {
-		return dueDate // return the original date if parsing fails
+		return "          " //dueDate // return the original date if parsing fails
 	}
 
 	// Get today's date
@@ -71,7 +71,7 @@ func formatPriority(priority int) string {
 
 // formatTask formats a single task into a string with a specific layout and color coding.
 func formatTask(task Task) string {
-	return fmt.Sprintf("%-4d %s %-12s %s %s\n", task.ID, formatPriority(task.Priority), applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+	return fmt.Sprintf("%-4d %s %s %s %s\n", task.ID, formatPriority(task.Priority), applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
 }
 
 // PrintTaskList lists all tasks grouped by their status (current, completed, archived)
