@@ -56,9 +56,22 @@ func applyColorToProject(projectList []string) string {
 	return strings.Join(coloredProjects, " ")
 }
 
+func formatPriority(priority int) string {
+
+	if priority == 1 {
+		return fmt.Sprintf("\033[32m\u278A\033[0m ")
+	} else if priority == 2 {
+		return fmt.Sprintf("\033[33m\u278B\033[0m ")
+	} else if priority == 3 {
+		return fmt.Sprintf("\033[31m\u278C\033[0m ")
+	} 
+
+	return "  "
+}
+
 // formatTask formats a single task into a string with a specific layout and color coding.
 func formatTask(task Task) string {
-	return fmt.Sprintf("%-4d %-12s %-1d %s %s\n", task.ID, applyColorToDate(task.Due), task.Priority, applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+	return fmt.Sprintf("%-4d %s %-12s %s %s\n", task.ID, formatPriority(task.Priority), applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
 }
 
 // PrintTaskList lists all tasks grouped by their status (current, completed, archived)
