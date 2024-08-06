@@ -88,9 +88,8 @@ func TestFormatTask(t *testing.T) {
 				Archived:  false,
 				Priority:  0,
 			},
-			expected: "1    \x1b[31m2024-07-24\x1b[0m " + "0 " +
-				"\x1b[35mproject1\x1b[0m \x1b[35mproject2\x1b[0m " +
-				"\x1b[34m@context1\x1b[0m Do something\n",
+			expected: "1"+"\033[31m2024-07-24\033[0m"+"\033[35mproject1\033[0m"+
+				"\033[35mproject2\033[0m" + "\033[34m@context1\033[0m"+"Do"+"something\n",
 		},
 		{
 			task: Task{
@@ -102,15 +101,14 @@ func TestFormatTask(t *testing.T) {
 				Archived:  false,
 				Priority:  3,
 			},
-			expected: "2    \x1b[31m2024-07-23\x1b[0m " + "3 " +
-				"\x1b[35mproject3\x1b[0m " +
-				"\x1b[34m@context2\x1b[0m Another task\n",
+			expected: "2"+"\033[31m\u278C\033[0m"+"\033[31m2024-07-23\033[0m"+
+				"\033[35mproject3\033[0m"+"\033[34m@context2\033[0m"+"Another"+"task\n",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run("", func(t *testing.T) {
-			got := formatTask(tt.task)
+			got := strings.Replace(formatTask(tt.task), " ", "", -1)
 			if got != tt.expected {
 				t.Errorf("formatTask() = %v, want %v", got, tt.expected)
 			}

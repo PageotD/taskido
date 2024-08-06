@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 * change priority from bool to int to handle priority levels
 
+### Fixed
+* correct too large empty space when no due date is provided
+
 ## [0.1.0] - 2024-08-02
 
 **-- INITIAL RELEASE --**
