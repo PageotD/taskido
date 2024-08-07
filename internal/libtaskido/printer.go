@@ -95,19 +95,19 @@ func PrintTaskList(taskList []Task) {
 	}
 
 	// Print tasks grouped by status
-	fmt.Printf("\033[4mCurrent:\033[0m\n")
+	fmt.Printf("\033[1;4mCurrent:\033[0;0m\n")
 	for _, task := range statusTasks["current"] {
 		fmt.Printf(formatTask(task)) 
 	}
 	fmt.Println()
 	
-	fmt.Printf("\033[4mCompleted:\033[0m\n")
+	fmt.Printf("\033[1;4mCompleted:\033[1;0m\n")
 	for _, task := range statusTasks["completed"] {
 		fmt.Printf(formatTask(task)) 
 	}
 	fmt.Println()
 
-	fmt.Printf("\033[4mArchived:\033[0m\n")
+	fmt.Printf("\033[1;4mArchived:\033[1;0m\n")
 	for _, task := range statusTasks["archived"] {
 		fmt.Printf(formatTask(task)) 
 	}
