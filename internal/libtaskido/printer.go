@@ -21,12 +21,12 @@ const (
 	White  = "\033[0;37m"
 )
 
-// applyColorToDate applies color based on the date's proximity to today
-func applyColorToDate(dueDate string) string {
+// formatDate applies color based on the date's proximity to today
+func formatDate(dueDate string) string {
 	// Parse the due date
 	date, err := time.Parse("2006-01-02", dueDate)
 	if err != nil {
-		return strings.Repeat(" ", 10) //dueDate // return the original date if parsing fails
+		return strings.Repeat(" ", 12) //dueDate // return the original date if parsing fails
 	}
 
 	// Get today's date
@@ -34,13 +34,13 @@ func applyColorToDate(dueDate string) string {
 	today := now.Truncate(24 * time.Hour)
 	tomorrow := today.Add(24 * time.Hour)
 
-	// Determine the color based on the date
+	// Add Flag or not based on the date
 	if date.Before(today) || date.Equal(today) {
-		return Red + dueDate + Reset
+		return fmt.Sprintf("%s\u2691%s %s", Red, Reset, dueDate)
 	} else if date.Equal(tomorrow) {
-		return Yellow + dueDate + Reset
+		return fmt.Sprintf("%s\u2691%s %s", Yellow, Reset, dueDate)
 	} else {
-		return Green + dueDate + Reset
+		return fmt.Sprintf("  %s", dueDate)
 	}
 }
 
@@ -75,7 +75,7 @@ func formatPriority(priority int) string {
 
 // formatTask formats a single task into a string with a specific layout and color coding.
 func formatTask(task Task) string {
-	return fmt.Sprintf("%-4d\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s %s\n", task.ID, formatPriority(task.Priority), applyColorToDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+	return fmt.Sprintf("%-4d\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s %s\n", task.ID, formatPriority(task.Priority), formatDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
 }
 
 // PrintTaskList lists all tasks grouped by their status (current, completed, archived)

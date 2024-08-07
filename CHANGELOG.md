@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 * change priority from bool to int to handle priority levels
+* add color flag to due date instead of applying color to full string 
 
 ### Fixed
 * correct too large empty space when no due date is provided
