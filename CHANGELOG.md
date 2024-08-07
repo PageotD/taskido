@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 * correct too large empty space when no due date is provided
+* correct ANSI color names in printer.go
 
 ## [0.1.0] - 2024-08-02
 

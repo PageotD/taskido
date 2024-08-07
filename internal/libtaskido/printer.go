@@ -9,12 +9,16 @@ import (
 
 // ANSI color codes
 const (
-	Red    = "\033[31m" // Red color code
-	Orange = "\033[33m" // Orange color code
-	Blue   = "\033[34m" // Blue color code
-	Green  = "\033[32m" // Green color code
-	Violet = "\033[35m" // Violet color code
-	Reset  = "\033[0m"  // Reset color code
+	Reset  = "\033[0;0m"
+	// Regular Colors
+	Black  = "\033[0;30m" 
+	Red    = "\033[0;31m"
+	Green  = "\033[0;32m"
+	Yellow = "\033[0;33m"
+	Blue   = "\033[0;34m"
+	Purple = "\033[0;35m"
+	Cyan   = "\033[0;36m"
+	White  = "\033[0;37m"
 )
 
 // applyColorToDate applies color based on the date's proximity to today
@@ -34,7 +38,7 @@ func applyColorToDate(dueDate string) string {
 	if date.Before(today) || date.Equal(today) {
 		return Red + dueDate + Reset
 	} else if date.Equal(tomorrow) {
-		return Orange + dueDate + Reset
+		return Yellow + dueDate + Reset
 	} else {
 		return Green + dueDate + Reset
 	}
@@ -50,7 +54,7 @@ func applyColorToSubject(subject string) string {
 func applyColorToProject(projectList []string) string {
 	var coloredProjects []string
 	for _, project := range projectList {
-		coloredProjects = append(coloredProjects, Violet+project+Reset)
+		coloredProjects = append(coloredProjects, Purple+project+Reset)
 	}
 	// Join colored projects with a space
 	return strings.Join(coloredProjects, " ")
