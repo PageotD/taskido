@@ -67,8 +67,8 @@ func TestLoadTasks(t *testing.T) {
 
 	// Prepare sample tasks
 	tasks := []Task{
-		{ID: 1, UUID: "uuid1", Subject: "Task 1"},
-		{ID: 2, UUID: "uuid2", Subject: "Task 2"},
+		{ID: 1, UUID: "uuid1", Description: "Task 1"},
+		{ID: 2, UUID: "uuid2", Description: "Task 2"},
 	}
 
 	// Save tasks to the file
@@ -87,7 +87,7 @@ func TestLoadTasks(t *testing.T) {
 	}
 
 	for i, task := range tasks {
-		if loadedTasks[i].ID != task.ID || loadedTasks[i].UUID != task.UUID || loadedTasks[i].Subject != task.Subject {
+		if loadedTasks[i].ID != task.ID || loadedTasks[i].UUID != task.UUID || loadedTasks[i].Description != task.Description {
 			t.Errorf("Loaded task %d does not match expected task. Got %+v, want %+v", i, loadedTasks[i], task)
 		}
 	}
@@ -99,8 +99,8 @@ func TestSaveTasks(t *testing.T) {
 
 	// Prepare sample tasks
 	tasks := []Task{
-		{ID: 1, UUID: "uuid1", Subject: "Task 1"},
-		{ID: 2, UUID: "uuid2", Subject: "Task 2"},
+		{ID: 1, UUID: "uuid1", Description: "Task 1"},
+		{ID: 2, UUID: "uuid2", Description: "Task 2"},
 	}
 
 	// Save tasks to the file
@@ -125,7 +125,7 @@ func TestSaveTasks(t *testing.T) {
 	}
 
 	for i, task := range tasks {
-		if savedTasks[i].ID != task.ID || savedTasks[i].UUID != task.UUID || savedTasks[i].Subject != task.Subject {
+		if savedTasks[i].ID != task.ID || savedTasks[i].UUID != task.UUID || savedTasks[i].Description != task.Description {
 			t.Errorf("Saved task %d does not match expected task. Got %+v, want %+v", i, savedTasks[i], task)
 		}
 	}

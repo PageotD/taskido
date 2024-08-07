@@ -2,7 +2,6 @@ package libtaskido
 
 import (
 	"testing"
-	"time"
 )
 
 func setUpTestTaskList(t *testing.T) []Task {
@@ -11,39 +10,33 @@ func setUpTestTaskList(t *testing.T) []Task {
 		{
 			ID:            1,
 			UUID:          "dd556cc5-ff74-4a4f-857f-2bcefac18e47",
-			Subject:       "develop some tests for @taskstorage",
+			Description:   "develop some tests for @taskstorage",
 			Projects:      []string{"taskido"},
 			Contexts:      []string{"taskstorage"},
 			Due:           "2024-08-30",
-			Completed:     false,
-			CompletedDate: "",
-			Archived:      false,
+			Status:        "pending",
 			Priority:      0,
 			CreatedAt:     "2024-08-30 15:04:05",
 		},
 		{
 			ID:            3,
 			UUID:          "dd556cc5-ff74-4a4f-857f-2bcefac18e48",
-			Subject:       "develop some @stuff",
+			Description:   "develop some @stuff",
 			Projects:      []string{"taskido"},
 			Contexts:      []string{"stuff"},
 			Due:           "2024-08-30",
-			Completed:     true,
-			CompletedDate: "2024-08-28",
-			Archived:      false,
+			Status:        "completed",
 			Priority:      0,
 			CreatedAt:     "2024-08-30 15:04:05",
 		},
 		{
 			ID:            4,
 			UUID:          "dd556cc5-ff74-4a4f-857f-2bcefac18e58",
-			Subject:       "test some @stuff",
+			Description:   "test some @stuff",
 			Projects:      []string{"taskido"},
 			Contexts:      []string{"stuff"},
 			Due:           "2024-08-30",
-			Completed:     true,
-			CompletedDate: "2024-08-28",
-			Archived:      true,
+			Status:        "archived",
 			Priority:      0,
 			CreatedAt:     "2024-08-30 15:04:05",
 		},
@@ -109,11 +102,8 @@ func TestMarkComplete (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	inputID := 1
 	newTaskList := MarkComplete(inputID, taskList)
-	if newTaskList[0].Completed != true {
-		t.Errorf("MarkComplete want complete = true")
-	}
-	if newTaskList[0].CompletedDate != time.Now().Format("2006-01-02") {
-		t.Errorf("MarkComplete completedDate want %s get %s", time.Now().Format("2006-01-02"), newTaskList[0].CompletedDate)
+	if newTaskList[0].Status != "completed" {
+		t.Errorf("MarkComplete want status == completed")
 	}
 
 }
@@ -122,11 +112,8 @@ func TestMarkUncomplete (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	inputID := 3
 	newTaskList := MarkUncomplete(inputID, taskList)
-	if newTaskList[1].Completed != false {
-		t.Errorf("MarkUncomplete want completed = false")
-	}
-	if newTaskList[1].CompletedDate != "" {
-		t.Errorf("MarkUncomplete completedDate want empty string get %s", newTaskList[0].CompletedDate)
+	if newTaskList[1].Status != "pending" {
+		t.Errorf("MarkUncomplete want status == pending")
 	}
 
 }
@@ -135,8 +122,8 @@ func TestMarkArchive (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	inputID := 3
 	newTaskList := MarkArchive(inputID, taskList)
-	if newTaskList[1].Archived != true {
-		t.Errorf("MarkArchive want archived = true")
+	if newTaskList[1].Status != "archived" {
+		t.Errorf("MarkArchive want status == archived")
 	}
 
 }
@@ -145,8 +132,8 @@ func TestMarkUnarchive (t *testing.T) {
 	taskList := setUpTestTaskList(t)
 	inputID := 4
 	newTaskList := MarkUnarchive(inputID, taskList)
-	if newTaskList[2].Archived != false {
-		t.Errorf("MarkUnarchive want archived = false")
+	if newTaskList[2].Status != "pending" {
+		t.Errorf("MarkUnarchive want status == pending")
 	}
 
 }

@@ -45,9 +45,9 @@ func formatDate(dueDate string) string {
 }
 
 // Helper function to apply color to the contexts
-func applyColorToSubject(subject string) string {
+func applyColorToDescription(description string) string {
 	// Replace @ followed by any characters with blue color
-	return regexp.MustCompile(`@(\S+)`).ReplaceAllString(subject, Blue+"@$1"+Reset)
+	return regexp.MustCompile(`@(\S+)`).ReplaceAllString(description, Blue+"@$1"+Reset)
 }
 
 // Helper function to apply color to the project names
@@ -75,7 +75,7 @@ func formatPriority(priority int) string {
 
 // formatTask formats a single task into a string with a specific layout and color coding.
 func formatTask(task Task) string {
-	return fmt.Sprintf("%-4d\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s %s\n", task.ID, formatPriority(task.Priority), formatDate(task.Due), applyColorToProject(task.Projects), applyColorToSubject(task.Subject))
+	return fmt.Sprintf("%-4d\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s\u0020\u0020\u0020\u0020 %s %s\n", task.ID, formatPriority(task.Priority), formatDate(task.Due), applyColorToProject(task.Projects), applyColorToDescription(task.Description))
 }
 
 // PrintTaskList lists all tasks grouped by their status (current, completed, archived)
@@ -85,18 +85,18 @@ func PrintTaskList(taskList []Task) {
 
 	// Iterate through tasks and collect projects
 	for _, task := range taskList {
-		if task.Archived {
+		if task.Status == "archived" {
 			statusTasks["archived"] = append(statusTasks["archived"], task)
-		} else if !task.Archived && task.Completed {
+		} else if task.Status == "completed" {
 			statusTasks["completed"] = append(statusTasks["completed"], task)
 		} else {
-			statusTasks["current"] = append(statusTasks["current"], task)
+			statusTasks["pending"] = append(statusTasks["pending"], task)
 		}
 	}
 
 	// Print tasks grouped by status
-	fmt.Printf("\033[1;4mCurrent:\033[0;0m\n")
-	for _, task := range statusTasks["current"] {
+	fmt.Printf("\033[1;4mPending:\033[0;0m\n")
+	for _, task := range statusTasks["pending"] {
 		fmt.Printf(formatTask(task)) 
 	}
 	fmt.Println()

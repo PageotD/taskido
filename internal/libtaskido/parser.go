@@ -38,13 +38,11 @@ func ParseNewTask(input []string) (Task, error) {
 	// Create and return a new Task
 	task := Task{
 		UUID:          uuid.NewString(),
-		Subject:       taskDescription,
+		Description:   taskDescription,
 		Projects:      projects,
 		Contexts:      contexts,
 		Due:           dueDate,
-		Completed:     false,
-		CompletedDate: "",
-		Archived:      false,
+		Status:        "pending",
 		Priority:      priority,
 		CreatedAt:     time.Now().Format("2006-01-02 15:04:05"),
 		UpdatedAt:     "",

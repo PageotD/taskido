@@ -34,9 +34,9 @@ func TestFormatDate(t *testing.T) {
 	}
 }
 
-func TestApplyColorToSubject(t *testing.T) {
+func TestApplyColorToDescription(t *testing.T) {
 	tests := []struct {
-		subject     string
+		description string
 		expectation string
 	}{
 		{"@John", "\033[0;34m@John\033[0;0m"},                           // With @
@@ -45,10 +45,10 @@ func TestApplyColorToSubject(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.subject, func(t *testing.T) {
-			result := applyColorToSubject(tt.subject)
+		t.Run(tt.description, func(t *testing.T) {
+			result := applyColorToDescription(tt.description)
 			if result != tt.expectation {
-				t.Errorf("applyColorToSubject(%s) = %s; want %s", tt.subject, result, tt.expectation)
+				t.Errorf("applyColorToDescription(%s) = %s; want %s", tt.description, result, tt.expectation)
 			}
 		})
 	}
@@ -84,9 +84,8 @@ func TestFormatTask(t *testing.T) {
 				ID:        1,
 				Due:       "2024-07-24",
 				Projects:  []string{"project1", "project2"},
-				Subject:   "@context1 Do something",
-				Completed: false,
-				Archived:  false,
+				Description:   "@context1 Do something",
+				Status:    "pending",
 				Priority:  0,
 			},
 			expected: []string{"1", "\033[0;31m⚑\033[0;0m", "2024-07-24", "\033[0;35mproject1\033[0;0m", "\033[0;35mproject2\033[0;0m", "\033[0;34m@context1\033[0;0m", "Do", "something"},
@@ -96,9 +95,8 @@ func TestFormatTask(t *testing.T) {
 				ID:        2,
 				Due:       "2024-07-23",
 				Projects:  []string{"project3"},
-				Subject:   "@context2 Another task",
-				Completed: true,
-				Archived:  false,
+				Description:   "@context2 Another task",
+				Status: "completed",
 				Priority:  3,
 			},
 			expected: []string{"2", "\033[0;31m\u278C\033[0;0m", "\033[0;31m⚑\033[0;0m", "2024-07-23", "\033[0;35mproject3\033[0;0m", "\033[0;34m@context2\033[0;0m", "Another", "task"},
