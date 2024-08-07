@@ -26,7 +26,7 @@ func applyColorToDate(dueDate string) string {
 	// Parse the due date
 	date, err := time.Parse("2006-01-02", dueDate)
 	if err != nil {
-		return "          " //dueDate // return the original date if parsing fails
+		return strings.Repeat(" ", 10) //dueDate // return the original date if parsing fails
 	}
 
 	// Get today's date
@@ -63,11 +63,11 @@ func applyColorToProject(projectList []string) string {
 func formatPriority(priority int) string {
 
 	if priority == 1 {
-		return fmt.Sprintf("\033[32m\u278A\033[0m")
+		return fmt.Sprintf("\033[0;32m\u278A\033[0;0m")
 	} else if priority == 2 {
-		return fmt.Sprintf("\033[33m\u278B\033[0m")
+		return fmt.Sprintf("\033[0;33m\u278B\033[0;0m")
 	} else if priority == 3 {
-		return fmt.Sprintf("\033[31m\u278C\033[0m")
+		return fmt.Sprintf("\033[0;31m\u278C\033[0;0m")
 	} 
 
 	return "\u0020"
