@@ -2,16 +2,16 @@ package libtaskido
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"time"
-	"regexp"
 )
 
 // ANSI color codes
 const (
-	Reset  = "\033[0;0m"
+	Reset = "\033[0;0m"
 	// Regular Colors
-	Black  = "\033[0;30m" 
+	Black  = "\033[0;30m"
 	Red    = "\033[0;31m"
 	Green  = "\033[0;32m"
 	Yellow = "\033[0;33m"
@@ -68,7 +68,7 @@ func formatPriority(priority int) string {
 		return fmt.Sprintf("\033[0;33m\u278B\033[0;0m")
 	} else if priority == 3 {
 		return fmt.Sprintf("\033[0;31m\u278C\033[0;0m")
-	} 
+	}
 
 	return "\u0020"
 }
@@ -97,19 +97,19 @@ func PrintTaskList(taskList []Task) {
 	// Print tasks grouped by status
 	fmt.Printf("\033[1;4mPending:\033[0;0m\n")
 	for _, task := range statusTasks["pending"] {
-		fmt.Printf(formatTask(task)) 
+		fmt.Printf(formatTask(task))
 	}
 	fmt.Println()
-	
+
 	fmt.Printf("\033[1;4mCompleted:\033[1;0m\n")
 	for _, task := range statusTasks["completed"] {
-		fmt.Printf(formatTask(task)) 
+		fmt.Printf(formatTask(task))
 	}
 	fmt.Println()
 
 	fmt.Printf("\033[1;4mArchived:\033[1;0m\n")
 	for _, task := range statusTasks["archived"] {
-		fmt.Printf(formatTask(task)) 
+		fmt.Printf(formatTask(task))
 	}
 	fmt.Println()
 }
@@ -121,18 +121,33 @@ func PrintTaskListByProjects(taskList []Task) {
 
 	// Iterate through tasks and collect projects
 	for _, task := range taskList {
-		for _, project := range task.Projects {
-			projectTasks[project] = append(projectTasks[project], task)
+		if len(task.Projects) > 0 {
+			for _, project := range task.Projects {
+				projectTasks[project] = append(projectTasks[project], task)
+			}
+		} else {
+			projectTasks["no project"] = append(projectTasks["no project"], task)
 		}
 	}
 
-	// Print tasks grouped by projects
-	for project, tasks := range projectTasks {
-		fmt.Printf("\033[35m%s\033[0m\n", project)
-		for _, task := range tasks {
-			fmt.Printf(formatTask(task)) 
+	// Print "no project" first
+	if len(projectTasks["no project"]) > 0 {
+		fmt.Printf("\033[34mno project\033[0m\n")
+		for _, task := range projectTasks["no project"] {
+			fmt.Printf(formatTask(task))
 		}
 		fmt.Println()
+	}
+
+	// Print tasks grouped by projects except "no project"
+	for project, tasks := range projectTasks {
+		if project != "no project" {
+			fmt.Printf("\033[34m%s\033[0m\n", project)
+			for _, task := range tasks {
+				fmt.Printf(formatTask(task))
+			}
+			fmt.Println()
+		}
 	}
 }
 
@@ -143,17 +158,32 @@ func PrintTaskListByContexts(taskList []Task) {
 
 	// Iterate through tasks and collect projects
 	for _, task := range taskList {
-		for _, context := range task.Contexts {
-			contextTasks[context] = append(contextTasks[context], task)
+		if len(task.Contexts) > 0 {
+			for _, context := range task.Contexts {
+				contextTasks[context] = append(contextTasks[context], task)
+			}
+		} else {
+			contextTasks["no context"] = append(contextTasks["no context"], task)
 		}
 	}
 
-	// Print tasks grouped by projects
-	for context, tasks := range contextTasks {
-		fmt.Printf("\033[34m%s\033[0m\n", context)
-		for _, task := range tasks {
-			fmt.Printf(formatTask(task)) 
+	// Print "no context" first
+	if len(contextTasks["no context"]) > 0 {
+		fmt.Printf("\033[34mno context\033[0m\n")
+		for _, task := range contextTasks["no context"] {
+			fmt.Printf(formatTask(task))
 		}
 		fmt.Println()
+	}
+
+	// Print tasks grouped by contexts except "no context"
+	for context, tasks := range contextTasks {
+		if context != "no context" {
+			fmt.Printf("\033[34m%s\033[0m\n", context)
+			for _, task := range tasks {
+				fmt.Printf(formatTask(task))
+			}
+			fmt.Println()
+		}
 	}
 }

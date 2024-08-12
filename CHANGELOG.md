@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 * change priority from bool to int to handle priority levels
 * add color flag to due date instead of applying color to full string 
 * redefine the Task model for simplicity
+* change PrintTaskListByContexts and PrintTaskListByProjects to take into account "no context" and "no project"
 
 ### Fixed
 * correct too large empty space when no due date is provided
